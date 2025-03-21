@@ -1,3 +1,4 @@
+
 version: '3'
 
 services:
@@ -13,7 +14,7 @@ services:
       - LANGWATCH_ENDPOINT=https://app.langwatch.ai
       - LANGWATCH_LOG_LEVEL=debug  # Set to debug for more verbose logging
       - N8N_ENCRYPTION_KEY=your-unique-encryption-key-at-least-32-chars
-      - N8N_LOG_LEVEL=info
+      - N8N_LOG_LEVEL=debug
       - DB_TYPE=sqlite
       - DB_SQLITE_PATH=/home/node/.n8n/database.sqlite
       - N8N_SKIP_WEBHOOK_DEREGISTRATION_SHUTDOWN=true
@@ -24,4 +25,4 @@ services:
     
 volumes:
   n8n_data:
-    name: n8n_data_fresh
+    name: n8n_data

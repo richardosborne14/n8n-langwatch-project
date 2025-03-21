@@ -11,15 +11,34 @@ RUN echo "Installing required packages..." && \
     ca-certificates \
     musl-dev
 
-# Install dependencies (much simpler now)
+# Switch to n8n's installation directory
 WORKDIR /usr/local/lib/node_modules/n8n
-RUN npm install winston
 
-# Copy instrumentation file
-COPY n8n-langwatch-direct.js ./
+# Install dependencies
+RUN npm install winston flat
+
+# Copy instrumentation files
+COPY index.js ./
+COPY logger.js ./
+COPY trace-manager.js ./
+COPY langwatch-client.js ./
+
+# Create subdirectories
+RUN mkdir -p ./instrumentation ./utils
+
+# Copy instrumentation files
+COPY instrumentation/index.js ./instrumentation/
+COPY instrumentation/node-instrumentation.js ./instrumentation/
+COPY instrumentation/workflow-instrumentation.js ./instrumentation/
+
+# Copy utility files
+COPY utils/helpers.js ./utils/
+COPY utils/model-detection.js ./utils/
+
+# Copy entrypoint script
 COPY docker-entrypoint.sh /docker-entrypoint.sh
 RUN chmod +x /docker-entrypoint.sh && \
-    chown node:node ./n8n-langwatch-direct.js /docker-entrypoint.sh
+    chown -R node:node /usr/local/lib/node_modules/n8n /docker-entrypoint.sh
 
 USER node
 
