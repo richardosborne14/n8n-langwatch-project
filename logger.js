@@ -1,42 +1,29 @@
-// logger.js - Logging configuration for n8n LangWatch integration
+// logger.js
 const winston = require('winston');
 
-// Initialize logger with default configuration
+// Configure logger with more detailed formatting
 const logger = winston.createLogger({
-  level: 'info',
+  level: process.env.LANGWATCH_LOG_LEVEL || 'info',
   format: winston.format.combine(
     winston.format.timestamp(),
-    winston.format.json()
+    winston.format.printf(({ level, message, timestamp, service }) => {
+      const serviceStr = service ? `[${service}] ` : '';
+      return `${timestamp} ${level}: ${serviceStr}${message}`;
+    })
   ),
   defaultMeta: { service: 'n8n-langwatch' },
   transports: [
     new winston.transports.Console({
       format: winston.format.combine(
         winston.format.colorize(),
-        winston.format.printf(({ level, message, timestamp, ...meta }) => {
-          const metaStr = Object.keys(meta).length > 0 
-            ? ` ${JSON.stringify(meta)}` 
-            : '';
-          return `${timestamp} [${level}]: ${message}${metaStr}`;
+        winston.format.timestamp(),
+        winston.format.printf(({ level, message, timestamp, service }) => {
+          const serviceStr = service ? `[${service}] ` : '';
+          return `${timestamp} ${level}: ${serviceStr}${message}`;
         })
       )
     })
   ]
 });
 
-/**
- * Configure the logger with custom settings
- * @param {Object} options - Logger configuration options
- * @param {string} options.logLevel - Log level (error, warn, info, debug)
- */
-function setupLogger(options = {}) {
-  if (options.logLevel) {
-    logger.level = options.logLevel.toLowerCase();
-    logger.info(`Log level set to: ${logger.level}`);
-  }
-}
-
-module.exports = { 
-  logger, 
-  setupLogger 
-};
+module.exports = logger;
