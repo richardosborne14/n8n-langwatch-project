@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  n8n:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "5678:5678"
+    environment:
+      - LANGWATCH_API_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0aW1lc3RhbXAiOjE3MzEzMjAxNzYxNjAsInJhbmQiOjAuMjA3NjgwMDQ3NDY3MjEzMTQsImlhdCI6MTczMTMyMDE3Nn0.5EuBIn3meTmmgs5gQxLxTUQ3lcAL87z4G0jkQoU8SZw
+      - LANGWATCH_ENDPOINT=https://app.langwatch.ai
+      - LANGWATCH_LOG_LEVEL=debug  # Set to debug for more verbose logging
+      - N8N_ENCRYPTION_KEY=your-unique-encryption-key-at-least-32-chars
+      - N8N_LOG_LEVEL=info
+      - DB_TYPE=sqlite
+      - DB_SQLITE_PATH=/home/node/.n8n/database.sqlite
+      - N8N_SKIP_WEBHOOK_DEREGISTRATION_SHUTDOWN=true
+      - N8N_USER_MANAGEMENT_DISABLED=true
+      - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true
+    volumes:
+      - n8n_data:/home/node/.n8n
+    
+volumes:
+  n8n_data:
+    name: n8n_data_fresh
