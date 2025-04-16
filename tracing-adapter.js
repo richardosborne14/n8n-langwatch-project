@@ -1,6 +1,6 @@
 "use strict";
 
-console.log('Loading minimal LangWatch adapter for n8n...');
+console.log('Loading LangWatch adapter for n8n (Homebrew installation)...');
 
 // Create simple logger
 const logger = {
@@ -10,16 +10,34 @@ const logger = {
 };
 
 // Try to load n8n instrumentation
-console.log('Loading n8n LangWatch instrumentation module...');
+logger.info('Loading n8n LangWatch instrumentation module...');
 let instrumentationModule;
 
 try {
-  // Only try to load from instrumentation directory
-  instrumentationModule = require("./instrumentation/n8n-langwatch-instrumentation");
-  console.log('Found instrumentation module in instrumentation directory');
+  // Load from the current directory
+  const path = require('path');
+  const localPath = path.join(__dirname, 'instrumentation/n8n-langwatch-instrumentation.js');
+  logger.info(`Trying to load instrumentation from: ${localPath}`);
+  
+  instrumentationModule = require(localPath);
+  logger.info('Found instrumentation module in local directory');
 } catch (error) {
-  console.error('Failed to import n8n-langwatch-instrumentation');
-  console.error('Error:', error.message);
+  logger.error(`Failed to import n8n-langwatch-instrumentation: ${error.message}`);
+  logger.error(error.stack);
+}
+
+// Setup global context with n8n paths
+try {
+  // Explicitly set the n8n path for instrumentation
+  global.n8nLangwatchConfig = {
+    n8nPath: '/opt/homebrew/lib/node_modules/n8n',
+    n8nVersion: '1.88.0',
+    homebrewInstall: true
+  };
+  
+  logger.info(`Set global n8n path: ${global.n8nLangwatchConfig.n8nPath}`);
+} catch (configError) {
+  logger.error(`Failed to set n8n path: ${configError.message}`);
 }
 
 // Display what we found
@@ -60,12 +78,7 @@ function initializeInstrumentation() {
       // If it's an object, look for setupN8nLangWatchInstrumentation
       if (typeof instrumentationModule.setupN8nLangWatchInstrumentation === 'function') {
         logger.info("Calling setupN8nLangWatchInstrumentation from module");
-        try {
-          return instrumentationModule.setupN8nLangWatchInstrumentation();
-        } catch (setupError) {
-          logger.error(`Error in setupN8nLangWatchInstrumentation: ${setupError ? setupError.message : 'Unknown error'}`);
-          return false;
-        }
+        return instrumentationModule.setupN8nLangWatchInstrumentation();
       }
       // Otherwise just return true since we loaded the module
       logger.info("Instrumentation module loaded as object without setup function");
@@ -75,11 +88,8 @@ function initializeInstrumentation() {
     // Default case, return true since we loaded something
     return true;
   } catch (error) {
-    const errorMessage = error ? error.message : 'Unknown error (error object is undefined)';
-    logger.error(`Error initializing instrumentation: ${errorMessage}`);
-    if (error && error.stack) {
-      logger.error(error.stack);
-    }
+    logger.error(`Error initializing instrumentation: ${error.message}`);
+    logger.error(error.stack);
     return false;
   }
 }
@@ -90,74 +100,6 @@ const baseUrl = process.env.LANGWATCH_ENDPOINT || "https://app.langwatch.ai";
 const collectorUrl = `${baseUrl}/api/collector`;
 
 logger.info(`Using LangWatch collector URL: ${collectorUrl}`);
-
-// Setup direct HTTP export as a fallback
-try {
-  if (apiKey) {
-    // Create a global function to send traces to LangWatch
-    global.sendTraceToLangWatch = function(traceData) {
-      try {
-        const https = require('https');
-        const http = require('http');
-        
-        const payload = JSON.stringify(traceData);
-        const isHttps = baseUrl.startsWith('https');
-        const client = isHttps ? https : http;
-        
-        const url = new URL(collectorUrl);
-        
-        const options = {
-          hostname: url.hostname,
-          port: url.port || (isHttps ? 443 : 80),
-          path: url.pathname,
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Content-Length': Buffer.byteLength(payload),
-            'X-Auth-Token': apiKey
-          }
-        };
-        
-        logger.debug(`Sending trace to LangWatch via HTTP: ${collectorUrl}`);
-        
-        const req = client.request(options, (res) => {
-          let responseData = '';
-          res.on('data', (chunk) => {
-            responseData += chunk;
-          });
-          
-          res.on('end', () => {
-            if (res.statusCode >= 200 && res.statusCode < 300) {
-              logger.debug(`Successfully sent trace to LangWatch: ${traceData.trace_id}`);
-            } else {
-              logger.error(`Error sending trace to LangWatch: ${res.statusCode} ${responseData}`);
-            }
-          });
-        });
-        
-        req.on('error', (error) => {
-          const errorMessage = error ? error.message : 'Unknown error';
-          logger.error(`Error sending HTTP request to LangWatch: ${errorMessage}`);
-        });
-        
-        req.write(payload);
-        req.end();
-        
-        return true;
-      } catch (error) {
-        const errorMessage = error ? error.message : 'Unknown error';
-        logger.error(`Failed to send trace via HTTP: ${errorMessage}`);
-        return false;
-      }
-    };
-    
-    logger.info("Registered global sendTraceToLangWatch function");
-  } else {
-    logger.error("No API Key provided for LangWatch - traces will not be sent");
-  }
-} catch (httpError) {
-  logger.error(`Failed to set up HTTP sender: ${httpError.message}`);
-}
 
 // Initialize the instrumentation
 const result = initializeInstrumentation();

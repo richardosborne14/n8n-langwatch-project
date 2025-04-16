@@ -1,166 +1,309 @@
-// n8n-langwatch-instrumentation.js - Main instrumentation module for n8n LangWatch integration
-const logger = require('../logger');
-const { setupN8nInstrumentation } = require('./index');
-const { TraceManager } = require('../trace-manager');
+"use strict";
 
-/**
- * Set up n8n LangWatch instrumentation
- * This function is called by the tracing-adapter.js
- * @returns {boolean} Success status
- */
+const path = require('path');
+const winston = require('winston');
+
+// Create logger with more detailed output
+const logger = winston.createLogger({
+  level: process.env.LANGWATCH_LOG_LEVEL || 'info',
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.printf(({ level, message, timestamp }) => {
+      return `${timestamp} ${level}: [n8n-langwatch] ${message}`;
+    })
+  ),
+  transports: [new winston.transports.Console()]
+});
+
+// Main instrumentation setup function
 function setupN8nLangWatchInstrumentation() {
   try {
     logger.info('Setting up n8n LangWatch instrumentation from main module');
     
-    // Initialize trace manager
-    const traceManager = new TraceManager();
+    // Try to get OpenTelemetry API
+    try {
+      const { trace, context, SpanStatusCode, SpanKind } = require('@opentelemetry/api');
+      logger.info('OpenTelemetry API loaded successfully');
+    } catch (otelError) {
+      logger.error(`Failed to load OpenTelemetry API: ${otelError.message}`);
+      logger.error(otelError.stack);
+      return false;
+    }
     
-    // Override the sendWorkflowToLangWatch method to add enhanced logging and fallback
-    traceManager.sendWorkflowToLangWatch = function(executionData) {
-      try {
-        const workflow = executionData.workflow;
-        const traceId = executionData.traceId;
+    // Try to import node modules
+    let flatModule;
+    try {
+      flatModule = require('flat');
+      logger.info('Flat module loaded successfully');
+    } catch (flatError) {
+      logger.error(`Failed to load flat module: ${flatError.message}`);
+      logger.error(flatError.stack);
+      return false;
+    }
+    
+    // Try to import n8n Core
+    let WorkflowExecute;
+    try {
+      const n8nCore = require('n8n-core');
+      WorkflowExecute = n8nCore.WorkflowExecute;
+      logger.info('n8n-core loaded successfully, found WorkflowExecute');
+      
+      if (!WorkflowExecute) {
+        logger.error('WorkflowExecute not found in n8n-core');
+        return false;
+      }
+      
+      if (!WorkflowExecute.prototype || !WorkflowExecute.prototype.processRunExecutionData) {
+        logger.error('WorkflowExecute.prototype.processRunExecutionData method not found');
+        logger.info(`Available methods: ${Object.keys(WorkflowExecute.prototype).join(', ')}`);
+        return false;
+      }
+    } catch (coreError) {
+      logger.error(`Failed to load n8n-core: ${coreError.message}`);
+      logger.error(coreError.stack);
+      return false;
+    }
+    
+    // Create a tracer instance
+    const { trace, context, SpanStatusCode, SpanKind } = require('@opentelemetry/api');
+    const tracer = trace.getTracer('n8n-langwatch', '1.0.0');
+    
+    // Patch the workflow execution with comprehensive error handling
+    try {
+      const originalProcessRun = WorkflowExecute.prototype.processRunExecutionData;
+      logger.info('Successfully captured original processRunExecutionData method');
+      
+      WorkflowExecute.prototype.processRunExecutionData = function (workflow) {
+        try {
+          const wfData = workflow || {};
+          const workflowId = wfData?.id ?? "";
+          const workflowName = wfData?.name ?? "";
+          
+          logger.info(`Workflow execution: ${workflowName} (${workflowId})`);
+          
+          // Create basic attributes
+          const workflowAttributes = {
+            "n8n.workflow.id": workflowId,
+            "n8n.workflow.name": workflowName,
+          };
+          
+          // Try to add settings if they exist
+          try {
+            if (wfData?.settings) {
+              const flat = require('flat');
+              const flattenedSettings = flat(wfData.settings, {
+                delimiter: ".",
+                transformKey: (key) => `n8n.workflow.settings.${key}`,
+              });
+              
+              Object.assign(workflowAttributes, flattenedSettings);
+              logger.debug(`Added ${Object.keys(flattenedSettings).length} settings attributes`);
+            }
+          } catch (settingsError) {
+            logger.warn(`Failed to flatten workflow settings: ${settingsError.message}`);
+          }
+          
+          // Create span for workflow execution
+          const span = tracer.startSpan("n8n.workflow.execute", {
+            attributes: workflowAttributes,
+            kind: SpanKind.INTERNAL,
+          });
+          
+          logger.info(`Starting span for workflow: ${workflowName}`);
+          
+          // Set the span as active
+          const activeContext = trace.setSpan(context.active(), span);
+          
+          return context.with(activeContext, () => {
+            // Call original function
+            const cancelable = originalProcessRun.apply(this, arguments);
+            
+            // Handle promise result
+            cancelable
+              .then(
+                (result) => {
+                  if (result?.data?.resultData?.error) {
+                    const err = result.data.resultData.error;
+                    span.recordException(err);
+                    span.setStatus({
+                      code: SpanStatusCode.ERROR,
+                      message: String(err.message || err),
+                    });
+                    logger.error(`Workflow execution error: ${err.message}`);
+                  } else {
+                    logger.info(`Workflow execution completed: ${workflowName}`);
+                  }
+                },
+                (error) => {
+                  span.recordException(error);
+                  span.setStatus({
+                    code: SpanStatusCode.ERROR,
+                    message: String(error.message || error),
+                  });
+                  logger.error(`Workflow execution rejected: ${error.message}`);
+                }
+              )
+              .finally(() => {
+                span.end();
+                logger.info(`Ended span for workflow: ${workflowName}`);
+              });
+            
+            return cancelable;
+          });
+        } catch (wrapperError) {
+          logger.error(`Error in processRunExecutionData wrapper: ${wrapperError.message}`);
+          logger.error(wrapperError.stack);
+          
+          // Fall back to original function if our wrapper fails
+          return originalProcessRun.apply(this, arguments);
+        }
+      };
+      
+      logger.info('Successfully patched processRunExecutionData method');
+    } catch (patchError) {
+      logger.error(`Failed to patch workflow execution: ${patchError.message}`);
+      logger.error(patchError.stack);
+      return false;
+    }
+    
+    // Patch the node execution with comprehensive error handling
+    try {
+      const originalRunNode = WorkflowExecute.prototype.runNode;
+      logger.info('Successfully captured original runNode method');
+      
+      WorkflowExecute.prototype.runNode = async function (
+        workflow,
+        executionData,
+        runExecutionData,
+        runIndex,
+        additionalData,
+        mode,
+        abortSignal
+      ) {
+        try {
+          // Safeguard against undefined this context
+          if (!this) {
+            logger.warn("WorkflowExecute context is undefined");
+            return originalRunNode.apply(this, arguments);
+          }
+          
+          const node = executionData?.node ?? { name: "unknown" };
+          const nodeName = node.name || "unknown";
+          const nodeType = node.type || "unknown";
+          
+          logger.info(`Node execution: ${nodeName} (${nodeType})`);
+          
+          const executionId = additionalData?.executionId ?? "unknown";
+          
+          // Create basic node attributes
+          const nodeAttributes = {
+            "n8n.workflow.id": workflow?.id ?? "unknown",
+            "n8n.execution.id": executionId,
+            "n8n.node.name": nodeName,
+            "n8n.node.type": nodeType,
+          };
+          
+          // Create and start node execution span
+          return tracer.startActiveSpan(
+            `n8n.node.execute`,
+            { attributes: nodeAttributes, kind: SpanKind.INTERNAL },
+            async (nodeSpan) => {
+              try {
+                // Call original method
+                const result = await originalRunNode.apply(this, [
+                  workflow,
+                  executionData,
+                  runExecutionData,
+                  runIndex,
+                  additionalData,
+                  mode,
+                  abortSignal,
+                ]);
+                
+                // Capture output data
+                try {
+                  const outputData = result?.data?.[runIndex];
+                  
+                  if (outputData && Array.isArray(outputData)) {
+                    const outputCount = outputData.length;
+                    nodeSpan.setAttribute("n8n.node.output_count", outputCount);
+                    logger.info(`Node ${nodeName} output: ${outputCount} items`);
+                    
+                    // Try to capture first item for debugging
+                    if (outputCount > 0 && outputData[0].json) {
+                      // Only log in debug mode to avoid cluttering logs
+                      logger.debug(`Node ${nodeName} first output item: ${JSON.stringify(outputData[0].json).substring(0, 200)}...`);
+                    }
+                  }
+                } catch (outputError) {
+                  logger.warn(`Failed to process node output: ${outputError.message}`);
+                }
+                
+                return result;
+              } catch (error) {
+                nodeSpan.recordException(error);
+                nodeSpan.setStatus({
+                  code: SpanStatusCode.ERROR,
+                  message: String(error.message || error),
+                });
+                nodeSpan.setAttribute("n8n.node.status", "error");
+                logger.error(`Node execution error: ${error.message}`);
+                throw error;
+              } finally {
+                nodeSpan.end();
+                logger.info(`Ended span for node: ${nodeName}`);
+              }
+            }
+          );
+        } catch (wrapperError) {
+          logger.error(`Error in runNode wrapper: ${wrapperError.message}`);
+          logger.error(wrapperError.stack);
+          
+          // Fall back to original function if our wrapper fails
+          return originalRunNode.apply(this, arguments);
+        }
+      };
+      
+      logger.info('Successfully patched runNode method');
+      
+      // Success - attach a global trace sender if we have an API key
+      if (global.sendTraceToLangWatch && process.env.LANGWATCH_API_KEY) {
+        logger.info('Setting up LangWatch direct trace export');
         
-        logger.debug(`Preparing to send ${executionData.spans.length} spans for workflow ${workflow.id}`);
-        
-        // Format complete trace data
-        const traceData = {
-          trace_id: traceId,
-          spans: executionData.spans,
-          metadata: {
-            user_id: "n8n-system",
-            thread_id: `workflow-${workflow.id}`,
-            labels: ["n8n", `workflow-${workflow.id}`, workflow.name]
+        // Create a simple export function
+        const sendTrace = (traceData) => {
+          try {
+            logger.debug(`Sending trace to LangWatch: ${traceData.trace_id}`);
+            const result = global.sendTraceToLangWatch(traceData);
+            return result;
+          } catch (error) {
+            logger.error(`Failed to send trace: ${error.message}`);
+            return false;
           }
         };
         
-        // Log debug info for debugging
-        logger.debug(`LangWatch trace data: ${JSON.stringify(traceData, null, 2)}`);
+        // Attach to global for other modules to use
+        global.langwatchExporter = {
+          sendTrace,
+        };
         
-        // Try to use the global function if available (from tracing.js)
-        if (typeof global.sendTraceToLangWatch === 'function') {
-          logger.info('Using global sendTraceToLangWatch function');
-          const success = global.sendTraceToLangWatch(traceData);
-          if (success) {
-            logger.info(`Sent workflow execution trace to LangWatch using global function: ${traceId}`);
-            return;
-          } else {
-            logger.warn('Global sendTraceToLangWatch function failed, falling back to direct HTTP');
-          }
-        }
-        
-        // Fallback to direct HTTP call if global function not available or failed
-        try {
-          const https = require('https');
-          const http = require('http');
-          
-          const apiKey = process.env.LANGWATCH_API_KEY;
-          if (!apiKey) {
-            logger.error('No LangWatch API key provided - cannot send trace');
-            return;
-          }
-          
-          const baseUrl = process.env.LANGWATCH_ENDPOINT || "https://app.langwatch.ai";
-          const collectorUrl = `${baseUrl}/api/collector`;
-          
-          const payload = JSON.stringify(traceData);
-          const isHttps = baseUrl.startsWith('https');
-          const client = isHttps ? https : http;
-          
-          const url = new URL(collectorUrl);
-          
-          const options = {
-            hostname: url.hostname,
-            port: url.port || (isHttps ? 443 : 80),
-            path: url.pathname,
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Content-Length': Buffer.byteLength(payload),
-              'X-Auth-Token': apiKey
-            }
-          };
-          
-          logger.info(`Sending trace to LangWatch via direct HTTP: ${collectorUrl}`);
-          
-          const req = client.request(options, (res) => {
-            let responseData = '';
-            res.on('data', (chunk) => {
-              responseData += chunk;
-            });
-            
-            res.on('end', () => {
-              if (res.statusCode >= 200 && res.statusCode < 300) {
-                logger.info(`Successfully sent trace to LangWatch: ${traceId}`);
-              } else {
-                logger.error(`Error sending trace to LangWatch: ${res.statusCode} ${responseData}`);
-              }
-            });
-          });
-          
-          req.on('error', (error) => {
-            const errorMessage = error ? error.message : 'Unknown error';
-            logger.error(`Error sending HTTP request to LangWatch: ${errorMessage}`);
-          });
-          
-          req.write(payload);
-          req.end();
-          
-        } catch (httpError) {
-          const errorMessage = httpError ? httpError.message : 'Unknown error';
-          logger.error(`Failed to send trace via HTTP: ${errorMessage}`);
-        }
-        
-        logger.info(`Processed workflow execution trace for LangWatch: ${traceId}`);
-      } catch (error) {
-        const errorMessage = error ? error.message : 'Unknown error';
-        logger.error(`Error sending workflow spans: ${errorMessage}`);
-        if (error && error.stack) {
-          logger.error(error.stack);
-        }
+        logger.info('Successfully set up LangWatch trace export');
       }
-    };
-    
-    // Set up instrumentation
-    let success = false;
-    try {
-      // Wrap in a try-catch to handle any errors
-      success = setupN8nInstrumentation(traceManager);
-    } catch (setupError) {
-      // Log the error and continue
-      const errorMessage = setupError ? setupError.message : 'Unknown error';
-      logger.error(`Error calling setupN8nInstrumentation: ${errorMessage}`);
-      
-      // If we have a stack trace, log it
-      if (setupError && setupError.stack) {
-        logger.error(`Stack trace: ${setupError.stack}`);
-      }
-      
-      // Continue with success = false
-    }
-    
-    if (success) {
-      logger.info('n8n LangWatch instrumentation setup complete');
-      
-      // Export the trace manager for other modules to use
-      global.n8nLangWatchTraceManager = traceManager;
       
       return true;
-    } else {
-      logger.error('Failed to set up n8n instrumentation');
+    } catch (patchError) {
+      logger.error(`Failed to patch node execution: ${patchError.message}`);
+      logger.error(patchError.stack);
       return false;
     }
   } catch (error) {
-    const errorMessage = error ? error.message : 'Unknown error (error object is undefined)';
-    logger.error(`Error in setupN8nLangWatchInstrumentation: ${errorMessage}`);
-    if (error && error.stack) {
-      logger.error(error.stack);
-    }
+    logger.error(`Failed to set up n8n instrumentation: ${error.message}`);
+    logger.error(error.stack);
     return false;
   }
 }
 
 // Export the setup function
 module.exports = {
-  setupN8nLangWatchInstrumentation
+  setupN8nLangWatchInstrumentation,
 };

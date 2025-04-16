@@ -14,13 +14,16 @@ RUN echo "Installing required packages..." && \
 # Switch to n8n's installation directory
 WORKDIR /usr/local/lib/node_modules/n8n
 
-# Install minimal dependencies - only what we need for API and auto-instrumentation
+# Install more complete dependencies for instrumentation
 RUN npm install \
     @opentelemetry/api@1.4.1 \
     @opentelemetry/context-async-hooks@1.13.0 \
     @opentelemetry/auto-instrumentations-node@0.37.0 \
     @opentelemetry/instrumentation@0.37.0 \
     @opentelemetry/instrumentation-http@0.37.0 \
+    @opentelemetry/sdk-node@0.37.0 \
+    @opentelemetry/resources@1.13.0 \
+    @opentelemetry/semantic-conventions@1.13.0 \
     winston@3.10.0 \
     flat@5.0.2
 
