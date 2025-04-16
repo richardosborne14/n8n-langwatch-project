@@ -149,7 +149,8 @@ class TraceManager {
       // Clean up execution data
       this.workflowExecutions.delete(workflow.id);
     } catch (error) {
-      logger.error(`Error sending workflow spans: ${error.message}`);
+      const errorMessage = error ? error.message : 'Unknown error';
+      logger.error(`Error sending workflow spans: ${errorMessage}`);
     }
   }
   
@@ -174,7 +175,8 @@ class TraceManager {
       await Promise.all(promises);
       logger.info('All pending traces flushed');
     } catch (error) {
-      logger.error(`Error flushing pending traces: ${error.message}`);
+      const errorMessage = error ? error.message : 'Unknown error';
+      logger.error(`Error flushing pending traces: ${errorMessage}`);
     }
   }
 }

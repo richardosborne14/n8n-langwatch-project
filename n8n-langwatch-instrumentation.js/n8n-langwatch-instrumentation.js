@@ -1,5 +1,5 @@
 // n8n-langwatch-instrumentation.js - Main instrumentation module for n8n LangWatch integration
-const logger = require('../logger');
+const { logger } = require('../logger');
 const { setupN8nInstrumentation } = require('./index');
 const { TraceManager } = require('../trace-manager');
 
@@ -99,45 +99,25 @@ function setupN8nLangWatchInstrumentation() {
           });
           
           req.on('error', (error) => {
-            const errorMessage = error ? error.message : 'Unknown error';
-            logger.error(`Error sending HTTP request to LangWatch: ${errorMessage}`);
+            logger.error(`Error sending HTTP request to LangWatch: ${error.message}`);
           });
           
           req.write(payload);
           req.end();
           
         } catch (httpError) {
-          const errorMessage = httpError ? httpError.message : 'Unknown error';
-          logger.error(`Failed to send trace via HTTP: ${errorMessage}`);
+          logger.error(`Failed to send trace via HTTP: ${httpError.message}`);
         }
         
         logger.info(`Processed workflow execution trace for LangWatch: ${traceId}`);
       } catch (error) {
-        const errorMessage = error ? error.message : 'Unknown error';
-        logger.error(`Error sending workflow spans: ${errorMessage}`);
-        if (error && error.stack) {
-          logger.error(error.stack);
-        }
+        logger.error(`Error sending workflow spans: ${error.message}`);
+        logger.error(error.stack);
       }
     };
     
     // Set up instrumentation
-    let success = false;
-    try {
-      // Wrap in a try-catch to handle any errors
-      success = setupN8nInstrumentation(traceManager);
-    } catch (setupError) {
-      // Log the error and continue
-      const errorMessage = setupError ? setupError.message : 'Unknown error';
-      logger.error(`Error calling setupN8nInstrumentation: ${errorMessage}`);
-      
-      // If we have a stack trace, log it
-      if (setupError && setupError.stack) {
-        logger.error(`Stack trace: ${setupError.stack}`);
-      }
-      
-      // Continue with success = false
-    }
+    const success = setupN8nInstrumentation(traceManager);
     
     if (success) {
       logger.info('n8n LangWatch instrumentation setup complete');
@@ -151,11 +131,8 @@ function setupN8nLangWatchInstrumentation() {
       return false;
     }
   } catch (error) {
-    const errorMessage = error ? error.message : 'Unknown error (error object is undefined)';
-    logger.error(`Error in setupN8nLangWatchInstrumentation: ${errorMessage}`);
-    if (error && error.stack) {
-      logger.error(error.stack);
-    }
+    logger.error(`Error in setupN8nLangWatchInstrumentation: ${error.message}`);
+    logger.error(error.stack);
     return false;
   }
 }

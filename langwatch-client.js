@@ -76,7 +76,7 @@ class LangWatchClient {
               }
             } else {
               const error = new Error(`HTTP Error: ${res.statusCode} ${responseData}`);
-              logger.error(`LangWatch API error: ${res.statusCode} ${responseData}`);
+              logger.error(`LangWatch API error: ${res.statusCode} ${responseData || 'No response data'}`);
               
               // Retry on server errors if we haven't hit max retries
               if (res.statusCode >= 500 && attempt < this.maxRetries) {
@@ -94,7 +94,8 @@ class LangWatchClient {
         });
         
         req.on('error', (error) => {
-          logger.error(`Error sending request to LangWatch: ${error.message}`);
+          const errorMessage = error ? error.message : 'Unknown error';
+          logger.error(`Error sending request to LangWatch: ${errorMessage}`);
           
           // Retry on connection errors if we haven't hit max retries
           if (attempt < this.maxRetries) {
@@ -129,7 +130,8 @@ class LangWatchClient {
         req.write(postData);
         req.end();
       } catch (error) {
-        logger.error(`Exception sending request to LangWatch: ${error.message}`);
+        const errorMessage = error ? error.message : 'Unknown error';
+        logger.error(`Exception sending request to LangWatch: ${errorMessage}`);
         reject(error);
       }
     });

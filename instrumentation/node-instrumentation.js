@@ -10,7 +10,17 @@ const { isAINode, detectModelInfo, extractModelParameters } = require('../utils/
 function setupNodeInstrumentation(traceManager) {
   try {
     // Import n8n core modules
-    const { WorkflowExecute } = require('n8n-core');
+    let WorkflowExecute;
+    try {
+      const n8nCore = require('n8n-core');
+      WorkflowExecute = n8nCore.WorkflowExecute;
+      if (!WorkflowExecute) {
+        throw new Error('WorkflowExecute not found in n8n-core');
+      }
+    } catch (importError) {
+      logger.error(`Failed to import n8n-core: ${importError.message}`);
+      return false;
+    }
     
     // Save the original method
     const originalRunNode = WorkflowExecute.prototype.runNode;
@@ -165,7 +175,7 @@ function setupNodeInstrumentation(traceManager) {
           },
           output: {
             type: "text",
-            value: `Error: ${error.message || String(error)}`
+            value: `Error: ${error ? (error.message || String(error)) : 'Unknown error'}`
           },
           timestamps: {
             started_at: nodeStartedAt,
@@ -182,7 +192,9 @@ function setupNodeInstrumentation(traceManager) {
     
     logger.debug('Node instrumentation set up successfully');
   } catch (error) {
-    logger.error(`Error setting up node instrumentation: ${error.message}`);
+    const errorMessage = error ? error.message : 'Unknown error (error object is undefined)';
+    logger.error(`Error setting up node instrumentation: ${errorMessage}`);
+    return false;
   }
 }
 

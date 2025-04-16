@@ -14,17 +14,12 @@ console.log('Loading n8n LangWatch instrumentation module...');
 let instrumentationModule;
 
 try {
-  instrumentationModule = require("./n8n-langwatch-instrumentation");
-  console.log('Found instrumentation module in root directory');
+  // Only try to load from instrumentation directory
+  instrumentationModule = require("./instrumentation/n8n-langwatch-instrumentation");
+  console.log('Found instrumentation module in instrumentation directory');
 } catch (error) {
-  try {
-    instrumentationModule = require("./instrumentation/n8n-langwatch-instrumentation");
-    console.log('Found instrumentation module in instrumentation directory');
-  } catch (innerError) {
-    console.error('Failed to import n8n-langwatch-instrumentation from any location');
-    console.error('Root error:', error.message);
-    console.error('Subdirectory error:', innerError.message);
-  }
+  console.error('Failed to import n8n-langwatch-instrumentation');
+  console.error('Error:', error.message);
 }
 
 // Display what we found
@@ -65,7 +60,12 @@ function initializeInstrumentation() {
       // If it's an object, look for setupN8nLangWatchInstrumentation
       if (typeof instrumentationModule.setupN8nLangWatchInstrumentation === 'function') {
         logger.info("Calling setupN8nLangWatchInstrumentation from module");
-        return instrumentationModule.setupN8nLangWatchInstrumentation();
+        try {
+          return instrumentationModule.setupN8nLangWatchInstrumentation();
+        } catch (setupError) {
+          logger.error(`Error in setupN8nLangWatchInstrumentation: ${setupError ? setupError.message : 'Unknown error'}`);
+          return false;
+        }
       }
       // Otherwise just return true since we loaded the module
       logger.info("Instrumentation module loaded as object without setup function");
@@ -75,8 +75,11 @@ function initializeInstrumentation() {
     // Default case, return true since we loaded something
     return true;
   } catch (error) {
-    logger.error(`Error initializing instrumentation: ${error.message}`);
-    logger.error(error.stack);
+    const errorMessage = error ? error.message : 'Unknown error (error object is undefined)';
+    logger.error(`Error initializing instrumentation: ${errorMessage}`);
+    if (error && error.stack) {
+      logger.error(error.stack);
+    }
     return false;
   }
 }
@@ -133,7 +136,8 @@ try {
         });
         
         req.on('error', (error) => {
-          logger.error(`Error sending HTTP request to LangWatch: ${error.message}`);
+          const errorMessage = error ? error.message : 'Unknown error';
+          logger.error(`Error sending HTTP request to LangWatch: ${errorMessage}`);
         });
         
         req.write(payload);
@@ -141,7 +145,8 @@ try {
         
         return true;
       } catch (error) {
-        logger.error(`Failed to send trace via HTTP: ${error.message}`);
+        const errorMessage = error ? error.message : 'Unknown error';
+        logger.error(`Failed to send trace via HTTP: ${errorMessage}`);
         return false;
       }
     };

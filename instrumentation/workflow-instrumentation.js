@@ -8,7 +8,17 @@ const { logger } = require('../logger');
 function setupWorkflowInstrumentation(traceManager) {
   try {
     // Import n8n core modules
-    const { WorkflowExecute } = require('n8n-core');
+    let WorkflowExecute;
+    try {
+      const n8nCore = require('n8n-core');
+      WorkflowExecute = n8nCore.WorkflowExecute;
+      if (!WorkflowExecute) {
+        throw new Error('WorkflowExecute not found in n8n-core');
+      }
+    } catch (importError) {
+      logger.error(`Failed to import n8n-core: ${importError.message}`);
+      return false;
+    }
     
     // Save the original method
     const originalProcessRun = WorkflowExecute.prototype.processRunExecutionData;
@@ -31,8 +41,9 @@ function setupWorkflowInstrumentation(traceManager) {
         },
         (error) => {
           // Complete the workflow execution with error
+          const errorMessage = error ? (error.message || String(error)) : 'Unknown error';
           traceManager.completeWorkflowExecution(workflow.id, { 
-            error: error.message || String(error) 
+            error: errorMessage
           });
         }
       );
@@ -42,7 +53,9 @@ function setupWorkflowInstrumentation(traceManager) {
     
     logger.debug('Workflow instrumentation set up successfully');
   } catch (error) {
-    logger.error(`Error setting up workflow instrumentation: ${error.message}`);
+    const errorMessage = error ? error.message : 'Unknown error (error object is undefined)';
+    logger.error(`Error setting up workflow instrumentation: ${errorMessage}`);
+    return false;
   }
 }
 

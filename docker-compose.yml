@@ -2,9 +2,7 @@ version: '3'
 
 services:
   n8n:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: n8nio/n8n:latest
     restart: unless-stopped
     ports:
       - "5678:5678"
@@ -12,7 +10,7 @@ services:
       # LangWatch settings
       - LANGWATCH_API_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0aW1lc3RhbXAiOjE3MzEzMjAxNzYxNjAsInJhbmQiOjAuMjA3NjgwMDQ3NDY3MjEzMTQsImlhdCI6MTczMTMyMDE3Nn0.5EuBIn3meTmmgs5gQxLxTUQ3lcAL87z4G0jkQoU8SZw
       - LANGWATCH_ENDPOINT=https://app.langwatch.ai
-      - LANGWATCH_LOG_LEVEL=info
+      - LANGWATCH_LOG_LEVEL=debug
       
       # n8n settings
       - N8N_ENCRYPTION_KEY=your-unique-encryption-key-at-least-32-chars
@@ -27,4 +25,4 @@ services:
     
 volumes:
   n8n_data:
-    name: n8n_data
+    name: n8n-langwatch-n8n
