@@ -12,31 +12,18 @@ services:
       # LangWatch settings
       - LANGWATCH_API_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0aW1lc3RhbXAiOjE3MzEzMjAxNzYxNjAsInJhbmQiOjAuMjA3NjgwMDQ3NDY3MjEzMTQsImlhdCI6MTczMTMyMDE3Nn0.5EuBIn3meTmmgs5gQxLxTUQ3lcAL87z4G0jkQoU8SZw
       - LANGWATCH_ENDPOINT=https://app.langwatch.ai
-      - LANGWATCH_LOG_LEVEL=debug
+      - LANGWATCH_LOG_LEVEL=info
       
       # n8n settings
       - N8N_ENCRYPTION_KEY=your-unique-encryption-key-at-least-32-chars
-      - N8N_LOG_LEVEL=debug
+      - N8N_LOG_LEVEL=info
       
-      # Node.js debugging settings
-      - NODE_DEBUG=http
-      - DEBUG=openai:*,langchain:*,n8n:*
-      
-      # Database settings (unchanged)
+      # Database settings
       - DB_TYPE=sqlite
       - DB_SQLITE_PATH=/home/node/.n8n/database.sqlite
       
-      # Add extra detailed logging for LLM calls
-      - OPENAI_DEBUG=true
-      - LANGCHAIN_TRACING_V2=true
-      
     volumes:
       - n8n_data:/home/node/.n8n
-      # Volume mounts for custom instrumentation
-      - ./logger.js:/usr/local/lib/node_modules/n8n/logger.js
-      - ./tracing.js:/usr/local/lib/node_modules/n8n/tracing.js
-      - ./n8n-langwatch-instrumentation.js:/usr/local/lib/node_modules/n8n/n8n-langwatch-instrumentation.js
-      - ./docker-entrypoint.sh:/docker-entrypoint.sh
     
 volumes:
   n8n_data:

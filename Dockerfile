@@ -14,26 +14,36 @@ RUN echo "Installing required packages..." && \
 # Switch to n8n's installation directory
 WORKDIR /usr/local/lib/node_modules/n8n
 
-# Install dependencies
-RUN npm install winston flat
+# Install minimal dependencies - only what we need for API and auto-instrumentation
+RUN npm install \
+    @opentelemetry/api@1.4.1 \
+    @opentelemetry/context-async-hooks@1.13.0 \
+    @opentelemetry/auto-instrumentations-node@0.37.0 \
+    @opentelemetry/instrumentation@0.37.0 \
+    @opentelemetry/instrumentation-http@0.37.0 \
+    winston@3.10.0 \
+    flat@5.0.2
 
-# Copy instrumentation files
+# Create subdirectories
+RUN mkdir -p ./instrumentation ./utils
+
+# Copy instrumentation files from instrumentation directory
+COPY instrumentation/* ./instrumentation/
+
+# Copy utility files
+COPY utils/* ./utils/
+
+# Copy core files
 COPY index.js ./
 COPY logger.js ./
 COPY trace-manager.js ./
 COPY langwatch-client.js ./
 
-# Create subdirectories
-RUN mkdir -p ./instrumentation ./utils
+# Copy the n8n-langwatch-instrumentation.js file to the root directory for tracing.js to find
+COPY instrumentation/n8n-langwatch-instrumentation.js ./
 
-# Copy instrumentation files
-COPY instrumentation/index.js ./instrumentation/
-COPY instrumentation/node-instrumentation.js ./instrumentation/
-COPY instrumentation/workflow-instrumentation.js ./instrumentation/
-
-# Copy utility files
-COPY utils/helpers.js ./utils/
-COPY utils/model-detection.js ./utils/
+# Copy tracing.js file
+COPY tracing.js ./
 
 # Copy entrypoint script
 COPY docker-entrypoint.sh /docker-entrypoint.sh
