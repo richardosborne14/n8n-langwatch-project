@@ -8,231 +8,39 @@ export LANGWATCH_API_KEY="${LANGWATCH_API_KEY}"
 export LANGWATCH_ENDPOINT="${LANGWATCH_ENDPOINT:-https://app.langwatch.ai}"
 export LANGWATCH_LOG_LEVEL="${LANGWATCH_LOG_LEVEL:-info}"
 
+# Set OpenTelemetry configuration
+export OTEL_SERVICE_NAME="${OTEL_SERVICE_NAME:-n8n}"
+export OTEL_SERVICE_VERSION="${N8N_VERSION:-unknown}"
+export OTEL_LOG_LEVEL="${OTEL_LOG_LEVEL:-info}"
+
 # Print active configuration
 echo "===== n8n LangWatch Integration Configuration ====="
 echo "LANGWATCH_ENDPOINT: ${LANGWATCH_ENDPOINT}"
 echo "LANGWATCH_API_KEY is ${LANGWATCH_API_KEY:+set}"
 echo "LANGWATCH_LOG_LEVEL: ${LANGWATCH_LOG_LEVEL}"
+echo "OTEL_SERVICE_NAME: ${OTEL_SERVICE_NAME}"
 echo "N8N_LOG_LEVEL: ${N8N_LOG_LEVEL:-info}"
 echo "===================================================="
 
-# Check required paths
+# Verify required files exist
 N8N_DIR="/usr/local/lib/node_modules/n8n"
 TRACING_FILE="${N8N_DIR}/tracing.js"
-ADAPTER_FILE="${N8N_DIR}/tracing-adapter.js"
-INSTRUMENTATION_ROOT="${N8N_DIR}/n8n-langwatch-instrumentation.js"
-INSTRUMENTATION_SUBDIR="${N8N_DIR}/instrumentation/n8n-langwatch-instrumentation.js"
+INSTRUMENTATION_FILE="${N8N_DIR}/n8n-otel-instrumentation.js"
+EXPORTER_FILE="${N8N_DIR}/langwatch-exporter.js"
 
-# Create tracing-adapter.js if not exists
-if [ ! -f "${ADAPTER_FILE}" ]; then
-  echo "Creating adapter file: ${ADAPTER_FILE}"
-  
-  # Copy the adapter file from our artifact
-  cat > "${ADAPTER_FILE}" << 'EOL'
-"use strict";
-
-console.log('Loading minimal LangWatch adapter for n8n...');
-
-// Create simple logger
-const logger = {
-  info: (msg) => console.log(`[INFO] ${msg}`),
-  error: (msg) => console.error(`[ERROR] ${msg}`),
-  debug: (msg) => process.env.LANGWATCH_LOG_LEVEL === 'debug' ? console.log(`[DEBUG] ${msg}`) : null
-};
-
-// Try to load n8n instrumentation
-console.log('Loading n8n LangWatch instrumentation module...');
-let instrumentationModule;
-
-try {
-  instrumentationModule = require("./n8n-langwatch-instrumentation");
-  console.log('Found instrumentation module in root directory');
-} catch (error) {
-  try {
-    instrumentationModule = require("./instrumentation/n8n-langwatch-instrumentation");
-    console.log('Found instrumentation module in instrumentation directory');
-  } catch (innerError) {
-    console.error('Failed to import n8n-langwatch-instrumentation from any location');
-    console.error('Root error:', error.message);
-    console.error('Subdirectory error:', innerError.message);
-  }
-}
-
-// Display what we found
-if (instrumentationModule) {
-  logger.info("Instrumentation module loaded successfully");
-  logger.info(`Module type: ${typeof instrumentationModule}`);
-  
-  if (typeof instrumentationModule === 'function') {
-    logger.info("Module is a function, will call directly");
-  } else if (typeof instrumentationModule === 'object') {
-    logger.info(`Module keys: ${Object.keys(instrumentationModule).join(', ')}`);
-    
-    // Check if it has setupN8nLangWatchInstrumentation
-    if (typeof instrumentationModule.setupN8nLangWatchInstrumentation === 'function') {
-      logger.info("Found setupN8nLangWatchInstrumentation function in module");
-    }
-  }
-}
-
-// Wrapper function that works with any structure
-function initializeInstrumentation() {
-  logger.info("Initializing LangWatch instrumentation");
-  
-  try {
-    // If no module was loaded, return false
-    if (!instrumentationModule) {
-      logger.error("No instrumentation module was loaded");
-      return false;
-    }
-    
-    // Check what type the module is and call appropriately
-    if (typeof instrumentationModule === 'function') {
-      // If it's a function, call it directly
-      logger.info("Calling instrumentation module as function");
-      return instrumentationModule();
-    } 
-    else if (typeof instrumentationModule === 'object') {
-      // If it's an object, look for setupN8nLangWatchInstrumentation
-      if (typeof instrumentationModule.setupN8nLangWatchInstrumentation === 'function') {
-        logger.info("Calling setupN8nLangWatchInstrumentation from module");
-        return instrumentationModule.setupN8nLangWatchInstrumentation();
-      }
-      // Otherwise just return true since we loaded the module
-      logger.info("Instrumentation module loaded as object without setup function");
-      return true;
-    }
-    
-    // Default case, return true since we loaded something
-    return true;
-  } catch (error) {
-    logger.error(`Error initializing instrumentation: ${error.message}`);
-    logger.error(error.stack);
-    return false;
-  }
-}
-
-// Set up HTTP support for trace sending
-const apiKey = process.env.LANGWATCH_API_KEY || "";
-const baseUrl = process.env.LANGWATCH_ENDPOINT || "https://app.langwatch.ai";
-const collectorUrl = `${baseUrl}/api/collector`;
-
-logger.info(`Using LangWatch collector URL: ${collectorUrl}`);
-
-// Setup direct HTTP export as a fallback
-try {
-  if (apiKey) {
-    // Create a global function to send traces to LangWatch
-    global.sendTraceToLangWatch = function(traceData) {
-      try {
-        const https = require('https');
-        const http = require('http');
-        
-        const payload = JSON.stringify(traceData);
-        const isHttps = baseUrl.startsWith('https');
-        const client = isHttps ? https : http;
-        
-        const url = new URL(collectorUrl);
-        
-        const options = {
-          hostname: url.hostname,
-          port: url.port || (isHttps ? 443 : 80),
-          path: url.pathname,
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Content-Length': Buffer.byteLength(payload),
-            'X-Auth-Token': apiKey
-          }
-        };
-        
-        logger.debug(`Sending trace to LangWatch via HTTP: ${collectorUrl}`);
-        
-        const req = client.request(options, (res) => {
-          let responseData = '';
-          res.on('data', (chunk) => {
-            responseData += chunk;
-          });
-          
-          res.on('end', () => {
-            if (res.statusCode >= 200 && res.statusCode < 300) {
-              logger.debug(`Successfully sent trace to LangWatch: ${traceData.trace_id}`);
-            } else {
-              logger.error(`Error sending trace to LangWatch: ${res.statusCode} ${responseData}`);
-            }
-          });
-        });
-        
-        req.on('error', (error) => {
-          logger.error(`Error sending HTTP request to LangWatch: ${error.message}`);
-        });
-        
-        req.write(payload);
-        req.end();
-        
-        return true;
-      } catch (error) {
-        logger.error(`Failed to send trace via HTTP: ${error.message}`);
-        return false;
-      }
-    };
-    
-    logger.info("Registered global sendTraceToLangWatch function");
-  } else {
-    logger.error("No API Key provided for LangWatch - traces will not be sent");
-  }
-} catch (httpError) {
-  logger.error(`Failed to set up HTTP sender: ${httpError.message}`);
-}
-
-// Initialize the instrumentation
-const result = initializeInstrumentation();
-logger.info(`Instrumentation initialization ${result ? 'successful' : 'failed'}`);
-
-console.log('LangWatch adapter initialization complete');
-
-// Export the wrapper function
-module.exports = initializeInstrumentation;
-EOL
-
-  chmod 644 "${ADAPTER_FILE}"
-  chown node:node "${ADAPTER_FILE}"
+if [ ! -f "${TRACING_FILE}" ]; then
+  echo "ERROR: Required file not found: ${TRACING_FILE}"
+  exit 1
 fi
 
-# Create or update tracing.js
-echo "Updating tracing file: ${TRACING_FILE}"
-cat > "${TRACING_FILE}" << 'EOL'
-"use strict";
+if [ ! -f "${INSTRUMENTATION_FILE}" ]; then
+  echo "ERROR: Required file not found: ${INSTRUMENTATION_FILE}"
+  exit 1
+fi
 
-console.log('Loading simplified LangWatch integration for n8n...');
-
-// Load our adapter that handles the instrumentation module correctly
-try {
-  const initializeInstrumentation = require('./tracing-adapter');
-  console.log('Adapter loaded successfully, calling initialization...');
-  
-  const result = initializeInstrumentation();
-  console.log(`Instrumentation setup ${result ? 'successful' : 'failed'}`);
-} catch (error) {
-  console.error('Error loading or running adapter:', error);
-}
-
-console.log('LangWatch initialization complete - n8n is starting');
-EOL
-
-chmod 644 "${TRACING_FILE}"
-chown node:node "${TRACING_FILE}"
-
-# Check if instrumentation file exists
-if [ ! -f "${INSTRUMENTATION_ROOT}" ]; then
-  if [ -f "${INSTRUMENTATION_SUBDIR}" ]; then
-    echo "Copying instrumentation file from subdirectory..."
-    cp "${INSTRUMENTATION_SUBDIR}" "${INSTRUMENTATION_ROOT}"
-    chmod 644 "${INSTRUMENTATION_ROOT}"
-    chown node:node "${INSTRUMENTATION_ROOT}"
-  else
-    echo "WARNING: No instrumentation file found. LangWatch tracking will be limited."
-  fi
+if [ ! -f "${EXPORTER_FILE}" ]; then
+  echo "ERROR: Required file not found: ${EXPORTER_FILE}"
+  exit 1
 fi
 
 # Make sure all JS files have correct permissions
@@ -240,7 +48,13 @@ find "${N8N_DIR}" -name "*.js" -type f -exec chmod 644 {} \; 2>/dev/null || true
 
 # Start n8n with LangWatch tracing
 echo "Starting n8n with LangWatch integration..."
-node --require "${TRACING_FILE}" /usr/local/bin/n8n "$@" || {
+
+if [ -z "${LANGWATCH_API_KEY}" ]; then
+  echo "WARNING: LANGWATCH_API_KEY is not set. Traces will not be sent to LangWatch."
+fi
+
+# Start n8n with OpenTelemetry tracing
+exec node --require "${TRACING_FILE}" /usr/local/bin/n8n "$@" || {
   # If fails with tracing, try without it
   echo "ERROR: Failed to start with tracing enabled. Trying without tracing..."
   n8n "$@"

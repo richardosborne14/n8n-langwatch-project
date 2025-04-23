@@ -1,8 +1,8 @@
-version: '3'
-
 services:
   n8n:
-    image: n8nio/n8n:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
     restart: unless-stopped
     ports:
       - "5678:5678"
@@ -10,19 +10,28 @@ services:
       # LangWatch settings
       - LANGWATCH_API_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0aW1lc3RhbXAiOjE3MzEzMjAxNzYxNjAsInJhbmQiOjAuMjA3NjgwMDQ3NDY3MjEzMTQsImlhdCI6MTczMTMyMDE3Nn0.5EuBIn3meTmmgs5gQxLxTUQ3lcAL87z4G0jkQoU8SZw
       - LANGWATCH_ENDPOINT=https://app.langwatch.ai
-      - LANGWATCH_LOG_LEVEL=debug
+      - LANGWATCH_LOG_LEVEL=info
+      
+      # OpenTelemetry settings
+      - OTEL_SERVICE_NAME=n8n
+      - OTEL_LOG_LEVEL=info
       
       # n8n settings
-      - N8N_ENCRYPTION_KEY=your-unique-encryption-key-at-least-32-chars
+      - N8N_ENCRYPTION_KEY=your_unique_encryption_key_at_least_32_chars
       - N8N_LOG_LEVEL=info
       
-      # Database settings
+      # Database settings (sqlite by default)
       - DB_TYPE=sqlite
       - DB_SQLITE_PATH=/home/node/.n8n/database.sqlite
       
+      # Enable executions of workflows to be saved for LangWatch tracing
+      - EXECUTIONS_PROCESS=main
+      - EXECUTIONS_MODE=regular
+      - EXECUTIONS_DATA_SAVE_ON_ERROR=all
+      - EXECUTIONS_DATA_SAVE_ON_SUCCESS=all
     volumes:
       - n8n_data:/home/node/.n8n
     
 volumes:
   n8n_data:
-    name: n8n-langwatch-n8n
+    name: n8n-langwatch-data

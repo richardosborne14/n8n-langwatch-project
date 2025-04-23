@@ -1,144 +1,79 @@
 # n8n LangWatch Integration
 
-This project provides integration between n8n workflows and LangWatch for AI observability and monitoring.
-
-## Overview
-
-This integration captures AI operations in n8n workflows and sends them to LangWatch for monitoring, analytics, and observability. It automatically detects and instruments AI nodes in n8n workflows, tracking important metrics and sending spans to LangWatch via HTTP REST.
+This project provides a seamless integration between n8n workflows and LangWatch for AI monitoring and observability. It captures detailed information about AI-related nodes in your n8n workflows, including inputs, outputs, and metadata, and sends it to LangWatch for analysis.
 
 ## Features
 
-- Automatic detection of AI/LLM nodes in n8n workflows
-- Tracks system prompts, user inputs, and AI model outputs
-- Captures token usage, model parameters, and execution time
-- Groups traces by workflow ID for easy correlation
-- Low overhead with direct HTTP communication
+- Automatically captures AI-related node executions in n8n workflows
+- Extracts prompts, completions, and parameters from AI service calls
+- Sends data to LangWatch in real-time
+- Supports multiple AI services (OpenAI, Anthropic, Google, etc.)
+- Minimal performance overhead
+- Compatible with n8n Docker deployments
+- Ready for Azure Web App deployments
 
-## Installation
+## Prerequisites
 
-### Prerequisites
-
-- Docker and Docker Compose (for Docker setup)
-- n8n installed locally (for local setup)
+- Docker and Docker Compose
 - A LangWatch account and API key
+- n8n instance (this integration extends the official n8n Docker image)
 
-### Docker Setup
+## Quick Start
 
-1. Clone this repository:
-   ```
-   git clone https://github.com/yourusername/n8n-langwatch.git
-   cd n8n-langwatch
-   ```
-
-2. Create an `.env` file with your LangWatch API key:
-   ```
-   LANGWATCH_API_KEY=your-api-key-here
-   LANGWATCH_LOG_LEVEL=info
-   ```
-
-3. Start the n8n instance with LangWatch integration:
-   ```
-   docker-compose up -d
-   ```
-
-4. Access n8n at http://localhost:5678
-
-### Local Setup
-
-1. Clone this repository:
-   ```
-   git clone https://github.com/yourusername/n8n-langwatch.git
-   cd n8n-langwatch
-   ```
-
-2. Create an `.env` file with your LangWatch API key:
-   ```
-   LANGWATCH_API_KEY=your-api-key-here
-   LANGWATCH_LOG_LEVEL=info
-   ```
-
-3. Start n8n with the local entrypoint script:
-   ```
-   chmod +x ./local-entrypoint.sh
-   ./local-entrypoint.sh
-   ```
-
+1. Clone this repository
+2. Set your LangWatch API key in the `docker-compose.yml` file
+3. Run `docker-compose up -d`
 4. Access n8n at http://localhost:5678
 
 ## Configuration
 
-The following environment variables can be configured:
+### Environment Variables
 
-- `LANGWATCH_API_KEY` - Your LangWatch API key (required)
-- `LANGWATCH_ENDPOINT` - LangWatch API endpoint (default: https://app.langwatch.ai)
-- `LANGWATCH_LOG_LEVEL` - Log level (error, warn, info, debug) (default: info)
-
-## Project Structure
-
-- `tracing.js` - Entry point for n8n instrumentation
-- `tracing-adapter.js` - Adapter that loads the instrumentation module
-- `logger.js` - Logging configuration
-- `langwatch-client.js` - API client for LangWatch
-- `trace-manager.js` - Manages trace lifecycle and sending to LangWatch
-- `instrumentation/` - n8n instrumentation code
-  - `index.js` - Combined instrumentation setup
-  - `n8n-langwatch-instrumentation.js` - Main instrumentation module
-  - `workflow-instrumentation.js` - Workflow execution tracking
-  - `node-instrumentation.js` - Node execution tracking
-- `utils/` - Utility functions
-  - `helpers.js` - Common utility functions
-  - `model-detection.js` - AI model detection utilities
-- `docker-entrypoint.sh` - Entry point for Docker setup
-- `local-entrypoint.sh` - Entry point for local setup
-- `diagnostic.js` - Diagnostic tool for checking the setup
-- `restart-n8n.sh` - Script to restart n8n with debug logging
-- `check-n8n.sh` - Script to check if n8n is running
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `LANGWATCH_API_KEY` | Your LangWatch API key (required) | - |
+| `LANGWATCH_ENDPOINT` | LangWatch API endpoint | https://app.langwatch.ai |
+| `LANGWATCH_LOG_LEVEL` | Log level for the integration | info |
+| `OTEL_SERVICE_NAME` | Service name in LangWatch | n8n |
+| `N8N_LOG_LEVEL` | n8n log level | info |
 
 ## How It Works
 
-The integration follows this flow:
+This integration uses OpenTelemetry to instrument n8n workflows and capture execution details without modifying the core n8n code. It:
 
-1. **Initialization**: When n8n starts, it loads `tracing.js` which initializes the instrumentation
-   - `tracing.js` loads `tracing-adapter.js`
-   - `tracing-adapter.js` loads the instrumentation module from `instrumentation/n8n-langwatch-instrumentation.js`
-   - The instrumentation module sets up the trace manager and patches n8n's methods
+1. Patches workflow and node execution methods to create OpenTelemetry spans
+2. Captures detailed information about AI-related nodes
+3. Converts OpenTelemetry spans to LangWatch trace format
+4. Sends traces to LangWatch via their REST API
 
-2. **Workflow Execution**:
-   - When a workflow runs, the patched methods capture execution data
-   - The trace manager creates a trace for the workflow execution
-   - Each node execution creates a span within that trace
+## Deployment to Azure Web App
 
-3. **AI Node Detection**:
-   - AI/LLM nodes are automatically detected based on type, name, and parameters
-   - For AI nodes, the integration extracts:
-     - Model information (vendor, model name)
-     - Input (user messages, system prompts)
-     - Output (AI responses)
-     - Performance metrics (tokens, execution time)
-     - Model parameters (temperature, etc.)
+To deploy this integration to Azure Web App:
 
-4. **Data Transmission**:
-   - The trace manager collects all spans for a workflow execution
-   - When the workflow completes, the data is sent to LangWatch via HTTP
-   - The LangWatch client handles retries and error handling
+1. Build the Docker image:
+   ```
+   docker build -t your-registry.azurecr.io/n8n-langwatch:latest .
+   docker push your-registry.azurecr.io/n8n-langwatch:latest
+   ```
+
+2. Create an Azure Web App with Docker Container:
+   - Set the image to your pushed image
+   - Configure environment variables (especially `LANGWATCH_API_KEY`)
+   - Add persistent storage for n8n data
+
+3. Deploy and monitor the application
 
 ## Troubleshooting
 
-If you encounter issues with the integration, you can:
+Common issues and their solutions:
 
-1. Set `LANGWATCH_LOG_LEVEL=debug` in your `.env` file for more detailed logs
-2. Run the diagnostic script to check your setup:
-   ```
-   node diagnostic.js
-   ```
-3. Use the restart script to restart n8n with debug logging:
-   ```
-   ./restart-n8n.sh
-   ```
-4. Check if n8n is running properly:
-   ```
-   ./check-n8n.sh
-   ```
+- **No traces in LangWatch**: Ensure your API key is correctly set and that you have AI-related nodes in your workflows.
+- **Docker container fails to start**: Check logs with `docker-compose logs` for errors.
+- **High memory usage**: Adjust the span retention settings in `tracing.js` if needed.
+
+## Contributing
+
+Contributions welcome! Please feel free to submit pull requests or open issues.
 
 ## License
 
