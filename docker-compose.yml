@@ -1,4 +1,25 @@
 services:
+  # Debug endpoint server
+  debug-endpoint:
+    build:
+      context: .
+      dockerfile: Dockerfile.debug-endpoint
+    restart: unless-stopped
+    ports:
+      - "3000:3000"  # Expose debug endpoint port
+    volumes:
+      - ./otel_logs:/app/otel_logs
+    environment:
+      - DEBUG_ENDPOINT_PORT=3000
+      - NODE_ENV=production
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/healthz"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  # n8n service
   n8n:
     build:
       context: .
@@ -6,19 +27,28 @@ services:
     restart: unless-stopped
     ports:
       - "5678:5678"
+    depends_on:
+      - debug-endpoint
     environment:
       # LangWatch settings
       - LANGWATCH_API_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0aW1lc3RhbXAiOjE3MzEzMjAxNzYxNjAsInJhbmQiOjAuMjA3NjgwMDQ3NDY3MjEzMTQsImlhdCI6MTczMTMyMDE3Nn0.5EuBIn3meTmmgs5gQxLxTUQ3lcAL87z4G0jkQoU8SZw
       - LANGWATCH_ENDPOINT=https://app.langwatch.ai
-      - LANGWATCH_LOG_LEVEL=info
+      - LANGWATCH_LOG_LEVEL=debug
+      
+      # Debug exporter settings
+      - USE_DEBUG_EXPORTER=true
+      - DEBUG_ENDPOINT=http://debug-endpoint:3000/debug-otel
+      - DEBUG_SEND_TO_LANGWATCH=true
+      - DEBUG_EXPORTER_LOG_LEVEL=debug
       
       # OpenTelemetry settings
       - OTEL_SERVICE_NAME=n8n
-      - OTEL_LOG_LEVEL=info
+      - OTEL_LOG_LEVEL=debug
       
       # n8n settings
       - N8N_ENCRYPTION_KEY=your_unique_encryption_key_at_least_32_chars
       - N8N_LOG_LEVEL=info
+      - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true
       
       # Database settings (sqlite by default)
       - DB_TYPE=sqlite
@@ -29,8 +59,32 @@ services:
       - EXECUTIONS_MODE=regular
       - EXECUTIONS_DATA_SAVE_ON_ERROR=all
       - EXECUTIONS_DATA_SAVE_ON_SUCCESS=all
+      
+      # Limit execution data to prevent disk space issues
+      - EXECUTIONS_DATA_MAX_AGE=72
+      - EXECUTIONS_DATA_PRUNE_MAX_COUNT=1000
+      
+      # Prevent permission issues
+      - NODE_UID=1000
+      - NODE_GID=1000
     volumes:
-      - n8n_data:/home/node/.n8n
+      - ./n8n_data:/home/node/.n8n
+      - ./disk-cleanup.sh:/disk-cleanup.sh
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '1'
+        reservations:
+          memory: 1G
+          cpus: '0.5'
+    user: node
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5678/healthz"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
     
 volumes:
   n8n_data:

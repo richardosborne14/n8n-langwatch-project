@@ -1,0 +1,46 @@
+FROM node:18-alpine
+
+# Create app directory
+WORKDIR /app
+
+# Install dependencies
+RUN apk add --no-cache curl jq
+
+# Copy application files
+COPY otel-debug-endpoint.js /app/
+
+# Create a package.json file
+RUN echo '{"name":"otel-debug-endpoint","version":"1.0.0","private":true,"dependencies":{"winston":"^3.10.0"}}' > /app/package.json
+
+# Install dependencies
+RUN npm install
+
+# Create logs directory
+RUN mkdir -p /app/otel_logs && \
+    chmod -R 777 /app/otel_logs
+
+# Add healthcheck endpoint to the debug endpoint script
+RUN sed -i '/const server = http.createServer/i \
+// Add healthcheck endpoint\n\
+function handleHealthCheck(req, res) {\n\
+  res.writeHead(200, { "Content-Type": "application/json" });\n\
+  res.end(JSON.stringify({ status: "ok", timestamp: new Date().toISOString() }));\n\
+}\n\
+' /app/otel-debug-endpoint.js && \
+    sed -i '/if (req.method === "POST" && req.url === "\/debug-otel") {/i \
+  // Handle healthcheck\n\
+  if (req.method === "GET" && req.url === "/healthz") {\n\
+    handleHealthCheck(req, res);\n\
+    return;\n\
+  }\n\
+' /app/otel-debug-endpoint.js
+
+# Expose the port
+EXPOSE 3000
+
+# Set environment variables
+ENV DEBUG_ENDPOINT_PORT=3000 \
+    NODE_ENV=production
+
+# Start the server
+CMD ["node", "otel-debug-endpoint.js"]

@@ -1,0 +1,19 @@
+{
+  "name": "n8n-otel-debug",
+  "version": "1.0.0",
+  "description": "Debug tools for n8n OpenTelemetry integration",
+  "private": true,
+  "scripts": {
+    "start-debug-endpoint": "node otel-debug-endpoint.js",
+    "test-debug-setup": "./test-debug-setup.sh",
+    "test-debug-exporter": "node test-debug-exporter.js"
+  },
+  "dependencies": {
+    "@opentelemetry/api": "^1.4.1",
+    "@opentelemetry/core": "^1.13.0",
+    "winston": "^3.10.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}

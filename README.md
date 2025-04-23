@@ -1,29 +1,26 @@
-# n8n LangWatch Integration
+# n8n-langwatch Integration
 
-This project provides a seamless integration between n8n workflows and LangWatch for AI monitoring and observability. It captures detailed information about AI-related nodes in your n8n workflows, including inputs, outputs, and metadata, and sends it to LangWatch for analysis.
+This project integrates [n8n](https://n8n.io/) with [LangWatch](https://langwatch.ai/) to provide observability for AI workflows in n8n.
 
 ## Features
 
-- Automatically captures AI-related node executions in n8n workflows
-- Extracts prompts, completions, and parameters from AI service calls
-- Sends data to LangWatch in real-time
-- Supports multiple AI services (OpenAI, Anthropic, Google, etc.)
-- Minimal performance overhead
-- Compatible with n8n Docker deployments
-- Ready for Azure Web App deployments
-
-## Prerequisites
-
-- Docker and Docker Compose
-- A LangWatch account and API key
-- n8n instance (this integration extends the official n8n Docker image)
+- OpenTelemetry instrumentation for n8n workflows
+- Automatic tracing of AI-related nodes (OpenAI, Claude, etc.)
+- Detailed metrics for LLM calls
+- Visualization of workflow execution in LangWatch
 
 ## Quick Start
 
 1. Clone this repository
-2. Set your LangWatch API key in the `docker-compose.yml` file
-3. Run `docker-compose up -d`
+2. Set your LangWatch API key in `.env` or directly in `docker-compose.yml`
+3. Run the container:
+
+```bash
+docker-compose up -d
+```
+
 4. Access n8n at http://localhost:5678
+5. View traces in your LangWatch dashboard
 
 ## Configuration
 
@@ -33,47 +30,78 @@ This project provides a seamless integration between n8n workflows and LangWatch
 |----------|-------------|---------|
 | `LANGWATCH_API_KEY` | Your LangWatch API key (required) | - |
 | `LANGWATCH_ENDPOINT` | LangWatch API endpoint | https://app.langwatch.ai |
-| `LANGWATCH_LOG_LEVEL` | Log level for the integration | info |
+| `LANGWATCH_LOG_LEVEL` | Log level for LangWatch integration | info |
 | `OTEL_SERVICE_NAME` | Service name in LangWatch | n8n |
-| `N8N_LOG_LEVEL` | n8n log level | info |
-
-## How It Works
-
-This integration uses OpenTelemetry to instrument n8n workflows and capture execution details without modifying the core n8n code. It:
-
-1. Patches workflow and node execution methods to create OpenTelemetry spans
-2. Captures detailed information about AI-related nodes
-3. Converts OpenTelemetry spans to LangWatch trace format
-4. Sends traces to LangWatch via their REST API
-
-## Deployment to Azure Web App
-
-To deploy this integration to Azure Web App:
-
-1. Build the Docker image:
-   ```
-   docker build -t your-registry.azurecr.io/n8n-langwatch:latest .
-   docker push your-registry.azurecr.io/n8n-langwatch:latest
-   ```
-
-2. Create an Azure Web App with Docker Container:
-   - Set the image to your pushed image
-   - Configure environment variables (especially `LANGWATCH_API_KEY`)
-   - Add persistent storage for n8n data
-
-3. Deploy and monitor the application
+| `N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS` | Enforce secure file permissions | true |
+| `EXECUTIONS_DATA_MAX_AGE` | Max age (hours) for execution data | 72 |
+| `EXECUTIONS_DATA_PRUNE_MAX_COUNT` | Max number of executions to keep | 1000 |
 
 ## Troubleshooting
 
-Common issues and their solutions:
+### OpenTelemetry API Duplicate Registration
 
-- **No traces in LangWatch**: Ensure your API key is correctly set and that you have AI-related nodes in your workflows.
-- **Docker container fails to start**: Check logs with `docker-compose logs` for errors.
-- **High memory usage**: Adjust the span retention settings in `tracing.js` if needed.
+If you see errors like:
+```
+Error: @opentelemetry/api: Attempted duplicate registration of API: context
+```
 
-## Contributing
+This is handled automatically in the latest version. The integration will continue to work despite this warning.
 
-Contributions welcome! Please feel free to submit pull requests or open issues.
+### Disk Space Issues
+
+If you encounter disk space errors (`ENOSPC: no space left on device`):
+
+1. The container includes automatic disk cleanup that runs daily
+2. You can manually trigger cleanup by running:
+   ```bash
+   docker exec n8n-langwatch_n8n_1 /disk-cleanup.sh
+   ```
+3. Adjust retention settings in docker-compose.yml:
+   ```yaml
+   - EXECUTIONS_DATA_MAX_AGE=24  # Reduce from default 72 hours
+   - EXECUTIONS_DATA_PRUNE_MAX_COUNT=500  # Reduce from default 1000
+   ```
+
+### OpenTelemetry SDK Compatibility Issues
+
+If you encounter errors like:
+```
+TypeError: Cannot set properties of undefined (setting 'contextManager')
+```
+
+This is fixed in the latest version by adding compatibility with newer versions of the OpenTelemetry SDK. The integration now checks for the existence of properties before attempting to set them.
+
+### File Permission Warnings
+
+If you see warnings about file permissions:
+```
+Permissions 0644 for n8n settings file /home/node/.n8n/config are too wide.
+```
+
+This is automatically fixed by setting `N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true` in the docker-compose.yml.
+
+### Invalid JSON Configuration
+
+If n8n fails to start due to invalid JSON in the config file, the entrypoint script will automatically back up the invalid file and create a new one.
+
+## Testing the Integration
+
+You can test if the LangWatch integration is working correctly by running:
+
+```bash
+docker exec n8n-langwatch_n8n_1 node /usr/local/lib/node_modules/n8n/test-langwatch.js
+```
+
+This will send a test trace to LangWatch. Check your LangWatch dashboard to confirm it was received.
+
+## Architecture
+
+This integration uses:
+
+1. OpenTelemetry for distributed tracing
+2. Custom n8n instrumentation to capture workflow and node execution
+3. LangWatch exporter to send traces to LangWatch
+4. Docker for containerization and easy deployment
 
 ## License
 

@@ -2,6 +2,18 @@
 
 const LangWatchExporter = require('./langwatch-exporter');
 
+// Define ExportResultCode if @opentelemetry/core is not available
+let ExportResultCode;
+try {
+  ExportResultCode = require("@opentelemetry/core").ExportResultCode;
+} catch (e) {
+  console.log("@opentelemetry/core not found, using fallback ExportResultCode");
+  ExportResultCode = {
+    SUCCESS: 0,
+    FAILED: 1
+  };
+}
+
 // Create a test trace
 const testTrace = {
   trace_id: "test-trace-" + Date.now(),
@@ -22,7 +34,8 @@ const testTrace = {
       timestamps: {
         started_at: Date.now() - 2000,
         finished_at: Date.now()
-      }
+      },
+      contexts: {} // Add empty contexts object as required by API
     }
   ],
   metadata: {
@@ -46,12 +59,21 @@ const exporter = new LangWatchExporter({
 
 // Send the test trace
 console.log("Sending test trace to LangWatch...");
-exporter.sendToLangWatch(testTrace)
-  .then(() => {
-    console.log("Test trace sent successfully!");
-    process.exit(0);
-  })
-  .catch(error => {
-    console.error("Error sending test trace:", error);
-    process.exit(1);
+// Create a promise wrapper around the _sendToLangWatch method
+new Promise((resolve, reject) => {
+  exporter._sendToLangWatch(testTrace, (result) => {
+    if (result.code === ExportResultCode.SUCCESS) {
+      resolve();
+    } else {
+      reject(result.error);
+    }
   });
+})
+.then(() => {
+  console.log("Test trace sent successfully!");
+  process.exit(0);
+})
+.catch(error => {
+  console.error("Error sending test trace:", error);
+  process.exit(1);
+});
