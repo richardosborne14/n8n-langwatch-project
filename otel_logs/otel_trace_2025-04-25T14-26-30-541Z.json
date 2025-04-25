@@ -1,0 +1,295 @@
+{
+  "trace_id": "b0994762344e89436bad1fdeb62a3dd3",
+  "spans": [
+    {
+      "span_id": "63641b912e0929f7",
+      "parent_span_id": "24a9d009252eed9d",
+      "trace_id": "b0994762344e89436bad1fdeb62a3dd3",
+      "name": "POST",
+      "kind": 2,
+      "start_time": [
+        1745591189,
+        89000000
+      ],
+      "end_time": [
+        1745591189,
+        554131957
+      ],
+      "duration_ms": null,
+      "status": {
+        "code": 0
+      },
+      "attributes": {
+        "http.url": "https://telemetry.n8n.io/v1/batch",
+        "http.method": "POST",
+        "http.target": "/v1/batch",
+        "net.peer.name": "telemetry.n8n.io",
+        "http.host": "telemetry.n8n.io:443",
+        "http.user_agent": "analytics-node/2.0.9",
+        "net.peer.ip": "172.67.68.102",
+        "net.peer.port": 443,
+        "http.response_content_length_uncompressed": 2,
+        "http.status_code": 200,
+        "http.status_text": "OK",
+        "http.flavor": "1.1",
+        "net.transport": "ip_tcp"
+      },
+      "events": [],
+      "links": []
+    },
+    {
+      "span_id": "1d5dc700b6b38a6b",
+      "parent_span_id": "e8d10ea6952a6956",
+      "trace_id": "e44e4d80a9e5cee3f9bfad68928c3385",
+      "name": "POST",
+      "kind": 2,
+      "start_time": [
+        1745591189,
+        80000000
+      ],
+      "end_time": [
+        1745591190,
+        256818291
+      ],
+      "duration_ms": null,
+      "status": {
+        "code": 0
+      },
+      "attributes": {
+        "http.url": "https://api.openai.com/v1/chat/completions",
+        "http.method": "POST",
+        "http.target": "/v1/chat/completions",
+        "net.peer.name": "api.openai.com",
+        "http.host": "api.openai.com:443",
+        "http.user_agent": [
+          "OpenAI/JS 4.78.1"
+        ],
+        "net.peer.ip": "162.159.140.245",
+        "net.peer.port": 443,
+        "http.status_code": 200,
+        "http.status_text": "OK",
+        "http.flavor": "1.1",
+        "net.transport": "ip_tcp"
+      },
+      "events": [],
+      "links": []
+    }
+  ],
+  "metadata": {
+    "service": "n8n",
+    "timestamp": 1745591190535,
+    "span_count": 2,
+    "workflow_span_count": 0,
+    "node_span_count": 0,
+    "workflow_id": null,
+    "workflow_name": null,
+    "environment": "production",
+    "n8n_version": "1.89.2"
+  },
+  "workflow_execution": null,
+  "raw_spans": [
+    {
+      "attributes": {
+        "http.url": "https://telemetry.n8n.io/v1/batch",
+        "http.method": "POST",
+        "http.target": "/v1/batch",
+        "net.peer.name": "telemetry.n8n.io",
+        "http.host": "telemetry.n8n.io:443",
+        "http.user_agent": "analytics-node/2.0.9",
+        "net.peer.ip": "172.67.68.102",
+        "net.peer.port": 443,
+        "http.response_content_length_uncompressed": 2,
+        "http.status_code": 200,
+        "http.status_text": "OK",
+        "http.flavor": "1.1",
+        "net.transport": "ip_tcp"
+      },
+      "links": [],
+      "events": [],
+      "_droppedAttributesCount": 0,
+      "_droppedEventsCount": 0,
+      "_droppedLinksCount": 0,
+      "status": {
+        "code": 0
+      },
+      "endTime": [
+        1745591189,
+        554131957
+      ],
+      "_ended": true,
+      "_duration": [
+        0,
+        465131957
+      ],
+      "name": "POST",
+      "_spanContext": {
+        "traceId": "b0994762344e89436bad1fdeb62a3dd3",
+        "spanId": "63641b912e0929f7",
+        "traceFlags": 1
+      },
+      "parentSpanId": "24a9d009252eed9d",
+      "kind": 2,
+      "_performanceStartTime": 44665.981438,
+      "_performanceOffset": -4.217529296875,
+      "_startTimeProvided": false,
+      "startTime": [
+        1745591189,
+        89000000
+      ],
+      "resource": {
+        "_attributes": {
+          "service.name": "n8n",
+          "telemetry.sdk.language": "nodejs",
+          "telemetry.sdk.name": "opentelemetry",
+          "telemetry.sdk.version": "1.13.0",
+          "service.version": "1.89.2",
+          "deployment.environment": "production",
+          "n8n.version": "1.89.2",
+          "n8n.instance_id": "default",
+          "process.pid": 7,
+          "process.executable.name": "node",
+          "process.executable.path": "/usr/local/bin/node",
+          "process.command_args": [
+            "/usr/local/bin/node",
+            "--require",
+            "/usr/local/lib/node_modules/n8n/tracing.js",
+            "/usr/local/bin/n8n"
+          ],
+          "process.runtime.version": "20.19.0",
+          "process.runtime.name": "nodejs",
+          "process.runtime.description": "Node.js",
+          "process.command": "/usr/local/bin/n8n",
+          "process.owner": "node"
+        },
+        "asyncAttributesPending": false,
+        "_syncAttributes": {
+          "service.name": "n8n",
+          "telemetry.sdk.language": "nodejs",
+          "telemetry.sdk.name": "opentelemetry",
+          "telemetry.sdk.version": "1.13.0",
+          "service.version": "1.89.2",
+          "deployment.environment": "production",
+          "n8n.version": "1.89.2",
+          "n8n.instance_id": "default"
+        },
+        "_asyncAttributesPromise": {}
+      },
+      "instrumentationLibrary": {
+        "name": "@opentelemetry/instrumentation-http",
+        "version": "0.39.1"
+      },
+      "_spanLimits": {
+        "attributeValueLengthLimit": null,
+        "attributeCountLimit": 128,
+        "linkCountLimit": 128,
+        "eventCountLimit": 128,
+        "attributePerEventCountLimit": 128,
+        "attributePerLinkCountLimit": 128
+      },
+      "_spanProcessor": "[Cannot stringify: Converting circular structure to JSON\n    --> starting at object with constructor 'DerivedLogger'\n    |     property '_readableState' -> object with constructor 'ReadableState'\n    |     property 'pipes' -> object with constructor 'Console'\n    --- property 'parent' closes the circle]",
+      "_attributeValueLengthLimit": null
+    },
+    {
+      "attributes": {
+        "http.url": "https://api.openai.com/v1/chat/completions",
+        "http.method": "POST",
+        "http.target": "/v1/chat/completions",
+        "net.peer.name": "api.openai.com",
+        "http.host": "api.openai.com:443",
+        "http.user_agent": [
+          "OpenAI/JS 4.78.1"
+        ],
+        "net.peer.ip": "162.159.140.245",
+        "net.peer.port": 443,
+        "http.status_code": 200,
+        "http.status_text": "OK",
+        "http.flavor": "1.1",
+        "net.transport": "ip_tcp"
+      },
+      "links": [],
+      "events": [],
+      "_droppedAttributesCount": 0,
+      "_droppedEventsCount": 0,
+      "_droppedLinksCount": 0,
+      "status": {
+        "code": 0
+      },
+      "endTime": [
+        1745591190,
+        256818291
+      ],
+      "_ended": true,
+      "_duration": [
+        1,
+        176818291
+      ],
+      "name": "POST",
+      "_spanContext": {
+        "traceId": "e44e4d80a9e5cee3f9bfad68928c3385",
+        "spanId": "1d5dc700b6b38a6b",
+        "traceFlags": 1
+      },
+      "parentSpanId": "e8d10ea6952a6956",
+      "kind": 2,
+      "_performanceStartTime": 44656.532896,
+      "_performanceOffset": -3.76904296875,
+      "_startTimeProvided": false,
+      "startTime": [
+        1745591189,
+        80000000
+      ],
+      "resource": {
+        "_attributes": {
+          "service.name": "n8n",
+          "telemetry.sdk.language": "nodejs",
+          "telemetry.sdk.name": "opentelemetry",
+          "telemetry.sdk.version": "1.13.0",
+          "service.version": "1.89.2",
+          "deployment.environment": "production",
+          "n8n.version": "1.89.2",
+          "n8n.instance_id": "default",
+          "process.pid": 7,
+          "process.executable.name": "node",
+          "process.executable.path": "/usr/local/bin/node",
+          "process.command_args": [
+            "/usr/local/bin/node",
+            "--require",
+            "/usr/local/lib/node_modules/n8n/tracing.js",
+            "/usr/local/bin/n8n"
+          ],
+          "process.runtime.version": "20.19.0",
+          "process.runtime.name": "nodejs",
+          "process.runtime.description": "Node.js",
+          "process.command": "/usr/local/bin/n8n",
+          "process.owner": "node"
+        },
+        "asyncAttributesPending": false,
+        "_syncAttributes": {
+          "service.name": "n8n",
+          "telemetry.sdk.language": "nodejs",
+          "telemetry.sdk.name": "opentelemetry",
+          "telemetry.sdk.version": "1.13.0",
+          "service.version": "1.89.2",
+          "deployment.environment": "production",
+          "n8n.version": "1.89.2",
+          "n8n.instance_id": "default"
+        },
+        "_asyncAttributesPromise": {}
+      },
+      "instrumentationLibrary": {
+        "name": "@opentelemetry/instrumentation-http",
+        "version": "0.39.1"
+      },
+      "_spanLimits": {
+        "attributeValueLengthLimit": null,
+        "attributeCountLimit": 128,
+        "linkCountLimit": 128,
+        "eventCountLimit": 128,
+        "attributePerEventCountLimit": 128,
+        "attributePerLinkCountLimit": 128
+      },
+      "_spanProcessor": "[Cannot stringify: Converting circular structure to JSON\n    --> starting at object with constructor 'DerivedLogger'\n    |     property '_readableState' -> object with constructor 'ReadableState'\n    |     property 'pipes' -> object with constructor 'Console'\n    --- property 'parent' closes the circle]",
+      "_attributeValueLengthLimit": null
+    }
+  ]
+}

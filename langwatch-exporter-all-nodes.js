@@ -182,7 +182,7 @@ class LangWatchExporter {
       const lwSpan = {
         span_id: spanId,
         name: nodeName,
-        type: isAI ? "llm" : "custom",
+        type: isAI ? "llm" : "unknown", // Use "unknown" for non-AI nodes
         timestamps: {
           started_at: Array.isArray(span.startTime) 
             ? Math.floor(span.startTime[0] * 1000 + span.startTime[1] / 1000000) // Convert [seconds, nanoseconds] to milliseconds
@@ -198,7 +198,7 @@ class LangWatchExporter {
         node_type: nodeType
       };
 
-        // Add vendor and model for AI nodes
+      // Add vendor and model for AI nodes
       if (isAI) {
         // Check if this is a RAG operation based on node type or attributes
         if (nodeType.includes("rag") || 
@@ -233,7 +233,7 @@ class LangWatchExporter {
                        "unknown");
       }
       
-      // Extract input
+      // Extract input for all nodes, not just AI nodes
       let input = null;
       if (attributes["n8n.node.parameter.prompt"]) {
         // Text prompt
@@ -266,8 +266,20 @@ class LangWatchExporter {
           type: "text",
           value: attributes["n8n.node.ai_input.last_message_content"]
         };
-      } else if (isAI) {
-        // For AI nodes without explicit input, create a default input
+      } else if (attributes["n8n.node.parameter.text"]) {
+        // Text parameter as input
+        input = {
+          type: "text",
+          value: attributes["n8n.node.parameter.text"]
+        };
+      } else if (attributes["n8n.node.parameter.value"]) {
+        // Value parameter as input
+        input = {
+          type: "text",
+          value: String(attributes["n8n.node.parameter.value"])
+        };
+      } else {
+        // For all nodes without explicit input, create a default input
         // This ensures Langwatch always has some input to display
         input = {
           type: "text",
@@ -280,7 +292,7 @@ class LangWatchExporter {
         lwSpan.input = input;
       }
       
-      // Extract output
+      // Extract output for all nodes, not just AI nodes
       if (attributes["n8n.node.output_json"]) {
         try {
           const outputJson = JSON.parse(attributes["n8n.node.output_json"]);
@@ -320,6 +332,13 @@ class LangWatchExporter {
               lwSpan.output = {
                 type: "text",
                 value: firstOutput.content
+              };
+            } else {
+              // Generic output for non-AI nodes
+              // Convert the output to a string representation
+              lwSpan.output = {
+                type: "text",
+                value: JSON.stringify(firstOutput, null, 2)
               };
             }
             
@@ -389,7 +408,7 @@ class LangWatchExporter {
       });
       
       if (Object.keys(params).length > 0) {
-        lwSpan.params = params;
+        lwSpan.params = {...lwSpan.params, ...params};
       }
       
       // Handle errors

@@ -1,0 +1,157 @@
+{
+  "trace_id": "2c76523058b5df547e489415f42707a5",
+  "spans": [
+    {
+      "span_id": "ecbb27ce52662dfc",
+      "parent_span_id": "eab2e018ded1123e",
+      "trace_id": "2c76523058b5df547e489415f42707a5",
+      "name": "n8n.workflow.execute",
+      "kind": 0,
+      "start_time": [
+        1745600288,
+        39000000
+      ],
+      "end_time": [
+        1745600292,
+        747886419
+      ],
+      "duration_ms": null,
+      "status": {
+        "code": 0
+      },
+      "attributes": {
+        "n8n.workflow.id": "Y4QULdSzTlwDVNyt",
+        "n8n.workflow.name": "My workflow",
+        "n8n.workflow.settings.executionOrder": "v1"
+      },
+      "events": [],
+      "links": [],
+      "workflow_data": {
+        "id": "Y4QULdSzTlwDVNyt",
+        "name": "My workflow",
+        "settings": {
+          "executionOrder": "v1"
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "service": "n8n",
+    "timestamp": 1745600294204,
+    "span_count": 1,
+    "workflow_span_count": 1,
+    "node_span_count": 0,
+    "workflow_id": "Y4QULdSzTlwDVNyt",
+    "workflow_name": "My workflow",
+    "environment": "production",
+    "n8n_version": "1.89.2"
+  },
+  "workflow_execution": {
+    "id": "Y4QULdSzTlwDVNyt",
+    "name": "My workflow",
+    "span_id": "ecbb27ce52662dfc",
+    "start_time": [
+      1745600288,
+      39000000
+    ],
+    "end_time": [
+      1745600292,
+      747886419
+    ],
+    "duration_ms": null,
+    "nodes": []
+  },
+  "raw_spans": [
+    {
+      "attributes": {
+        "n8n.workflow.id": "Y4QULdSzTlwDVNyt",
+        "n8n.workflow.name": "My workflow",
+        "n8n.workflow.settings.executionOrder": "v1"
+      },
+      "links": [],
+      "events": [],
+      "_droppedAttributesCount": 0,
+      "_droppedEventsCount": 0,
+      "_droppedLinksCount": 0,
+      "status": {
+        "code": 0
+      },
+      "endTime": [
+        1745600292,
+        747886419
+      ],
+      "_ended": true,
+      "_duration": [
+        4,
+        708886419
+      ],
+      "name": "n8n.workflow.execute",
+      "_spanContext": {
+        "traceId": "2c76523058b5df547e489415f42707a5",
+        "spanId": "ecbb27ce52662dfc",
+        "traceFlags": 1
+      },
+      "parentSpanId": "eab2e018ded1123e",
+      "kind": 0,
+      "_performanceStartTime": 48186.69098,
+      "_performanceOffset": 34286.203125,
+      "_startTimeProvided": false,
+      "startTime": [
+        1745600288,
+        39000000
+      ],
+      "resource": {
+        "_attributes": {
+          "service.name": "n8n",
+          "telemetry.sdk.language": "nodejs",
+          "telemetry.sdk.name": "opentelemetry",
+          "telemetry.sdk.version": "1.13.0",
+          "service.version": "1.89.2",
+          "deployment.environment": "production",
+          "n8n.version": "1.89.2",
+          "n8n.instance_id": "default",
+          "process.pid": 7,
+          "process.executable.name": "node",
+          "process.executable.path": "/usr/local/bin/node",
+          "process.command_args": [
+            "/usr/local/bin/node",
+            "--require",
+            "/usr/local/lib/node_modules/n8n/tracing.js",
+            "/usr/local/bin/n8n"
+          ],
+          "process.runtime.version": "20.19.0",
+          "process.runtime.name": "nodejs",
+          "process.runtime.description": "Node.js",
+          "process.command": "/usr/local/bin/n8n",
+          "process.owner": "node"
+        },
+        "asyncAttributesPending": false,
+        "_syncAttributes": {
+          "service.name": "n8n",
+          "telemetry.sdk.language": "nodejs",
+          "telemetry.sdk.name": "opentelemetry",
+          "telemetry.sdk.version": "1.13.0",
+          "service.version": "1.89.2",
+          "deployment.environment": "production",
+          "n8n.version": "1.89.2",
+          "n8n.instance_id": "default"
+        },
+        "_asyncAttributesPromise": {}
+      },
+      "instrumentationLibrary": {
+        "name": "n8n-instrumentation",
+        "version": "1.0.0"
+      },
+      "_spanLimits": {
+        "attributeValueLengthLimit": null,
+        "attributeCountLimit": 128,
+        "linkCountLimit": 128,
+        "eventCountLimit": 128,
+        "attributePerEventCountLimit": 128,
+        "attributePerLinkCountLimit": 128
+      },
+      "_spanProcessor": "[Cannot stringify: Converting circular structure to JSON\n    --> starting at object with constructor 'DerivedLogger'\n    |     property '_readableState' -> object with constructor 'ReadableState'\n    |     property 'pipes' -> object with constructor 'Console'\n    --- property 'parent' closes the circle]",
+      "_attributeValueLengthLimit": null
+    }
+  ]
+}

@@ -23,6 +23,7 @@ const opentelemetry = require("@opentelemetry/sdk-node");
 const { getNodeAutoInstrumentations } = require("@opentelemetry/auto-instrumentations-node");
 const { registerInstrumentations } = require("@opentelemetry/instrumentation");
 const { Resource } = require("@opentelemetry/resources");
+const { detectResourcesSync } = require('@opentelemetry/resources');
 const { SemanticResourceAttributes } = require("@opentelemetry/semantic-conventions");
 const { BatchSpanProcessor } = require("@opentelemetry/sdk-trace-base");
 const winston = require("winston");
@@ -31,7 +32,7 @@ const winston = require("winston");
 const useDebugExporter = process.env.USE_DEBUG_EXPORTER === 'true';
 const LangWatchExporter = useDebugExporter 
   ? require("./debug-exporter") 
-  : require("./langwatch-exporter");
+  : require("./langwatch-exporter-all-nodes");  // Use the all-nodes exporter
 
 // Create a logger
 const logLevel = process.env.LANGWATCH_LOG_LEVEL || "info";
