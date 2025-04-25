@@ -324,16 +324,24 @@ function setupN8nOpenTelemetry() {
             try {
               const outputData = result?.data?.[runIndex];
               
-              // Only process more detailed output data for AI nodes to save space
-              if (isAi) {
+              // Capture output data for all nodes
+              if (outputData) {
                 const finalJson = outputData?.map((item) => item.json);
                 
-                // For AI nodes, we want to capture the full output for LangWatch
+                // Add the full output JSON for all nodes
                 try {
                   nodeSpan.setAttribute('n8n.node.output_json', JSON.stringify(finalJson));
                   
-                  // Extract specific AI output attributes
-                  if (Array.isArray(finalJson) && finalJson.length > 0) {
+                  // Basic output metadata for all nodes
+                  nodeSpan.setAttribute('n8n.node.output_count', outputData.length);
+                  if (outputData.length > 0 && outputData[0].json) {
+                    const firstItem = outputData[0].json;
+                    const outputType = Array.isArray(firstItem) ? 'array' : typeof firstItem;
+                    nodeSpan.setAttribute('n8n.node.output_type', outputType);
+                  }
+                  
+                  // For AI nodes, add additional detailed attributes
+                  if (isAi && Array.isArray(finalJson) && finalJson.length > 0) {
                     const firstOutput = finalJson[0];
                     
                     // OpenAI-style output
@@ -400,21 +408,7 @@ function setupN8nOpenTelemetry() {
                     }
                   }
                 } catch (jsonError) {
-                  logger.warn(`Error processing AI node output for ${nodeName}:`, jsonError);
-                }
-              } else {
-                // For non-AI nodes, just capture basic output type info to save space
-                if (outputData) {
-                  nodeSpan.setAttribute('n8n.node.output_count', outputData.length);
-                  if (outputData.length > 0 && outputData[0].json) {
-                    const firstItem = outputData[0].json;
-                    const outputType = Array.isArray(firstItem) ? 'array' : typeof firstItem;
-                    nodeSpan.setAttribute('n8n.node.output_type', outputType);
-                    
-                    // Include a small sample of the output for context
-                    const sample = JSON.stringify(firstItem).substring(0, 200);
-                    nodeSpan.setAttribute('n8n.node.output_sample', `${sample}${sample.length >= 200 ? '...' : ''}`);
-                  }
+                  logger.warn(`Error processing node output for ${nodeName}:`, jsonError);
                 }
               }
             } catch (error) {

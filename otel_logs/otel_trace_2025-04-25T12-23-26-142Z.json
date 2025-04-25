@@ -1,0 +1,1409 @@
+{
+  "trace_id": "0180eea79f0d3f7ae28c06f87adc720e",
+  "spans": [
+    {
+      "span_id": "71a217dc2386b3bc",
+      "trace_id": "0180eea79f0d3f7ae28c06f87adc720e",
+      "name": "GET",
+      "kind": 1,
+      "start_time": [
+        1745583802,
+        256000000
+      ],
+      "end_time": [
+        1745583802,
+        362123250
+      ],
+      "duration_ms": null,
+      "status": {
+        "code": 0
+      },
+      "attributes": {
+        "http.url": "http://localhost:5678/assets/Logo-DjpNa7ha.js",
+        "http.host": "localhost:5678",
+        "net.host.name": "localhost",
+        "http.method": "GET",
+        "http.scheme": "http",
+        "http.target": "/assets/Logo-DjpNa7ha.js",
+        "http.user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36",
+        "http.flavor": "1.1",
+        "net.transport": "ip_tcp",
+        "net.host.ip": "172.18.0.3",
+        "net.host.port": 5678,
+        "net.peer.ip": "172.18.0.1",
+        "net.peer.port": 56610,
+        "http.status_code": 200,
+        "http.status_text": "OK"
+      },
+      "events": [],
+      "links": []
+    },
+    {
+      "span_id": "3a5cd6ddcc4fe546",
+      "trace_id": "bce1ae95ca2cff75356a3287069e77f3",
+      "name": "GET",
+      "kind": 1,
+      "start_time": [
+        1745583802,
+        346000000
+      ],
+      "end_time": [
+        1745583802,
+        453433083
+      ],
+      "duration_ms": null,
+      "status": {
+        "code": 0
+      },
+      "attributes": {
+        "http.url": "http://localhost:5678/assets/useExecutionHelpers-Bet0YWvb.js",
+        "http.host": "localhost:5678",
+        "net.host.name": "localhost",
+        "http.method": "GET",
+        "http.scheme": "http",
+        "http.target": "/assets/useExecutionHelpers-Bet0YWvb.js",
+        "http.user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36",
+        "http.flavor": "1.1",
+        "net.transport": "ip_tcp",
+        "net.host.ip": "172.18.0.3",
+        "net.host.port": 5678,
+        "net.peer.ip": "172.18.0.1",
+        "net.peer.port": 65228,
+        "http.status_code": 200,
+        "http.status_text": "OK"
+      },
+      "events": [],
+      "links": []
+    },
+    {
+      "span_id": "2b9cec30da6eb7ee",
+      "trace_id": "3b677b957cfd6c4e28a4ac2fb92d27da",
+      "name": "GET",
+      "kind": 1,
+      "start_time": [
+        1745583802,
+        357000000
+      ],
+      "end_time": [
+        1745583802,
+        453690125
+      ],
+      "duration_ms": null,
+      "status": {
+        "code": 0
+      },
+      "attributes": {
+        "http.url": "http://localhost:5678/assets/dateFormatter-DP26ifk_.js",
+        "http.host": "localhost:5678",
+        "net.host.name": "localhost",
+        "http.method": "GET",
+        "http.scheme": "http",
+        "http.target": "/assets/dateFormatter-DP26ifk_.js",
+        "http.user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36",
+        "http.flavor": "1.1",
+        "net.transport": "ip_tcp",
+        "net.host.ip": "172.18.0.3",
+        "net.host.port": 5678,
+        "net.peer.ip": "172.18.0.1",
+        "net.peer.port": 65214,
+        "http.status_code": 200,
+        "http.status_text": "OK"
+      },
+      "events": [],
+      "links": []
+    },
+    {
+      "span_id": "e0024e9d3a3ebfb0",
+      "trace_id": "9e26de88ad41e21201e9ca655522f1f3",
+      "name": "GET",
+      "kind": 1,
+      "start_time": [
+        1745583802,
+        345000000
+      ],
+      "end_time": [
+        1745583802,
+        454618250
+      ],
+      "duration_ms": null,
+      "status": {
+        "code": 0
+      },
+      "attributes": {
+        "http.url": "http://localhost:5678/assets/RunDataAi-DsidSvp-.js",
+        "http.host": "localhost:5678",
+        "net.host.name": "localhost",
+        "http.method": "GET",
+        "http.scheme": "http",
+        "http.target": "/assets/RunDataAi-DsidSvp-.js",
+        "http.user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36",
+        "http.flavor": "1.1",
+        "net.transport": "ip_tcp",
+        "net.host.ip": "172.18.0.3",
+        "net.host.port": 5678,
+        "net.peer.ip": "172.18.0.1",
+        "net.peer.port": 65242,
+        "http.status_code": 200,
+        "http.status_text": "OK"
+      },
+      "events": [],
+      "links": []
+    },
+    {
+      "span_id": "42896bb566176ebc",
+      "trace_id": "b38cd52eedeffe70ac99c3e502560c86",
+      "name": "GET",
+      "kind": 1,
+      "start_time": [
+        1745583802,
+        261000000
+      ],
+      "end_time": [
+        1745583802,
+        458457625
+      ],
+      "duration_ms": null,
+      "status": {
+        "code": 0
+      },
+      "attributes": {
+        "http.url": "http://localhost:5678/assets/CanvasChatSwitch-B5IdrA6Q.js",
+        "http.host": "localhost:5678",
+        "net.host.name": "localhost",
+        "http.method": "GET",
+        "http.scheme": "http",
+        "http.target": "/assets/CanvasChatSwitch-B5IdrA6Q.js",
+        "http.user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36",
+        "http.flavor": "1.1",
+        "net.transport": "ip_tcp",
+        "net.host.ip": "172.18.0.3",
+        "net.host.port": 5678,
+        "net.peer.ip": "172.18.0.1",
+        "net.peer.port": 65212,
+        "http.status_code": 200,
+        "http.status_text": "OK"
+      },
+      "events": [],
+      "links": []
+    },
+    {
+      "span_id": "5929ad6ca6427239",
+      "trace_id": "5d0b07449335f0d0aa871ac99628dd5f",
+      "name": "GET",
+      "kind": 1,
+      "start_time": [
+        1745583802,
+        556000000
+      ],
+      "end_time": [
+        1745583802,
+        567418458
+      ],
+      "duration_ms": null,
+      "status": {
+        "code": 0
+      },
+      "attributes": {
+        "http.url": "http://localhost:5678/assets/InterVariable-DiVDrmQJ.woff2",
+        "http.host": "localhost:5678",
+        "net.host.name": "localhost",
+        "http.method": "GET",
+        "http.scheme": "http",
+        "http.target": "/assets/InterVariable-DiVDrmQJ.woff2",
+        "http.user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36",
+        "http.flavor": "1.1",
+        "net.transport": "ip_tcp",
+        "net.host.ip": "172.18.0.3",
+        "net.host.port": 5678,
+        "net.peer.ip": "172.18.0.1",
+        "net.peer.port": 56614,
+        "http.status_code": 304,
+        "http.status_text": "NOT MODIFIED"
+      },
+      "events": [],
+      "links": []
+    },
+    {
+      "span_id": "92724bd296956f87",
+      "trace_id": "33d9086e834cd24c0c904378e3dc0ed8",
+      "name": "GET",
+      "kind": 1,
+      "start_time": [
+        1745583802,
+        555000000
+      ],
+      "end_time": [
+        1745583802,
+        571031667
+      ],
+      "duration_ms": null,
+      "status": {
+        "code": 0
+      },
+      "attributes": {
+        "http.url": "http://localhost:5678/assets/buttons.esm-BOkmSohe.js",
+        "http.host": "localhost:5678",
+        "net.host.name": "localhost",
+        "http.method": "GET",
+        "http.scheme": "http",
+        "http.target": "/assets/buttons.esm-BOkmSohe.js",
+        "http.user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36",
+        "http.flavor": "1.1",
+        "net.transport": "ip_tcp",
+        "net.host.ip": "172.18.0.3",
+        "net.host.port": 5678,
+        "net.peer.ip": "172.18.0.1",
+        "net.peer.port": 56610,
+        "http.status_code": 200,
+        "http.status_text": "OK"
+      },
+      "events": [],
+      "links": []
+    },
+    {
+      "span_id": "914718cde3907c93",
+      "trace_id": "e44caf2d5c7036b707c3737f615c5275",
+      "name": "GET",
+      "kind": 1,
+      "start_time": [
+        1745583802,
+        547000000
+      ],
+      "end_time": [
+        1745583802,
+        586448333
+      ],
+      "duration_ms": null,
+      "status": {
+        "code": 0
+      },
+      "attributes": {
+        "http.url": "http://localhost:5678/rest/active-workflows",
+        "http.host": "localhost:5678",
+        "net.host.name": "localhost",
+        "http.method": "GET",
+        "http.scheme": "http",
+        "http.target": "/rest/active-workflows",
+        "http.user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36",
+        "http.flavor": "1.1",
+        "net.transport": "ip_tcp",
+        "net.host.ip": "172.18.0.3",
+        "net.host.port": 5678,
+        "net.peer.ip": "172.18.0.1",
+        "net.peer.port": 65212,
+        "http.status_code": 304,
+        "http.status_text": "NOT MODIFIED"
+      },
+      "events": [],
+      "links": []
+    },
+    {
+      "span_id": "9430c3e5db07985c",
+      "trace_id": "2d9368c54628f761105c06f767e3a063",
+      "name": "GET",
+      "kind": 1,
+      "start_time": [
+        1745583802,
+        549000000
+      ],
+      "end_time": [
+        1745583802,
+        587767458
+      ],
+      "duration_ms": null,
+      "status": {
+        "code": 0
+      },
+      "attributes": {
+        "http.url": "http://localhost:5678/types/credentials.json",
+        "http.host": "localhost:5678",
+        "net.host.name": "localhost",
+        "http.method": "GET",
+        "http.scheme": "http",
+        "http.target": "/types/credentials.json",
+        "http.user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36",
+        "http.flavor": "1.1",
+        "net.transport": "ip_tcp",
+        "net.host.ip": "172.18.0.3",
+        "net.host.port": 5678,
+        "net.peer.ip": "172.18.0.1",
+        "net.peer.port": 65242,
+        "http.status_code": 200,
+        "http.status_text": "OK"
+      },
+      "events": [],
+      "links": []
+    },
+    {
+      "span_id": "1a4a1317ed19a49c",
+      "trace_id": "7f75ef10eaf174f1cce9acb23b052a3a",
+      "name": "GET",
+      "kind": 1,
+      "start_time": [
+        1745583802,
+        511000000
+      ],
+      "end_time": [
+        1745583802,
+        591794833
+      ],
+      "duration_ms": null,
+      "status": {
+        "code": 0
+      },
+      "attributes": {
+        "http.url": "http://localhost:5678/rest/credentials?includeScopes=true&includeData=true",
+        "http.host": "localhost:5678",
+        "net.host.name": "localhost",
+        "http.method": "GET",
+        "http.scheme": "http",
+        "http.target": "/rest/credentials?includeScopes=true&includeData=true",
+        "http.user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36",
+        "http.flavor": "1.1",
+        "net.transport": "ip_tcp",
+        "net.host.ip": "172.18.0.3",
+        "net.host.port": 5678,
+        "net.peer.ip": "172.18.0.1",
+        "net.peer.port": 65214,
+        "http.status_code": 304,
+        "http.status_text": "NOT MODIFIED"
+      },
+      "events": [],
+      "links": []
+    }
+  ],
+  "metadata": {
+    "service": "n8n",
+    "timestamp": 1745583806135,
+    "span_count": 10,
+    "workflow_span_count": 0,
+    "node_span_count": 0,
+    "workflow_id": null,
+    "workflow_name": null,
+    "environment": "production",
+    "n8n_version": "1.89.2"
+  },
+  "workflow_execution": null,
+  "raw_spans": [
+    {
+      "attributes": {
+        "http.url": "http://localhost:5678/assets/Logo-DjpNa7ha.js",
+        "http.host": "localhost:5678",
+        "net.host.name": "localhost",
+        "http.method": "GET",
+        "http.scheme": "http",
+        "http.target": "/assets/Logo-DjpNa7ha.js",
+        "http.user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36",
+        "http.flavor": "1.1",
+        "net.transport": "ip_tcp",
+        "net.host.ip": "172.18.0.3",
+        "net.host.port": 5678,
+        "net.peer.ip": "172.18.0.1",
+        "net.peer.port": 56610,
+        "http.status_code": 200,
+        "http.status_text": "OK"
+      },
+      "links": [],
+      "events": [],
+      "_droppedAttributesCount": 0,
+      "_droppedEventsCount": 0,
+      "_droppedLinksCount": 0,
+      "status": {
+        "code": 0
+      },
+      "endTime": [
+        1745583802,
+        362123250
+      ],
+      "_ended": true,
+      "_duration": [
+        0,
+        106123250
+      ],
+      "name": "GET",
+      "_spanContext": {
+        "traceId": "0180eea79f0d3f7ae28c06f87adc720e",
+        "spanId": "71a217dc2386b3bc",
+        "traceFlags": 1
+      },
+      "kind": 1,
+      "_performanceStartTime": 361390.035707,
+      "_performanceOffset": 0.5302734375,
+      "_startTimeProvided": false,
+      "startTime": [
+        1745583802,
+        256000000
+      ],
+      "resource": {
+        "_attributes": {
+          "service.name": "n8n",
+          "telemetry.sdk.language": "nodejs",
+          "telemetry.sdk.name": "opentelemetry",
+          "telemetry.sdk.version": "1.13.0",
+          "service.version": "1.89.2",
+          "deployment.environment": "production",
+          "n8n.version": "1.89.2",
+          "n8n.instance_id": "default",
+          "process.pid": 7,
+          "process.executable.name": "node",
+          "process.executable.path": "/usr/local/bin/node",
+          "process.command_args": [
+            "/usr/local/bin/node",
+            "--require",
+            "/usr/local/lib/node_modules/n8n/tracing.js",
+            "/usr/local/bin/n8n"
+          ],
+          "process.runtime.version": "20.19.0",
+          "process.runtime.name": "nodejs",
+          "process.runtime.description": "Node.js",
+          "process.command": "/usr/local/bin/n8n",
+          "process.owner": "node"
+        },
+        "asyncAttributesPending": false,
+        "_syncAttributes": {
+          "service.name": "n8n",
+          "telemetry.sdk.language": "nodejs",
+          "telemetry.sdk.name": "opentelemetry",
+          "telemetry.sdk.version": "1.13.0",
+          "service.version": "1.89.2",
+          "deployment.environment": "production",
+          "n8n.version": "1.89.2",
+          "n8n.instance_id": "default"
+        },
+        "_asyncAttributesPromise": {}
+      },
+      "instrumentationLibrary": {
+        "name": "@opentelemetry/instrumentation-http",
+        "version": "0.39.1"
+      },
+      "_spanLimits": {
+        "attributeValueLengthLimit": null,
+        "attributeCountLimit": 128,
+        "linkCountLimit": 128,
+        "eventCountLimit": 128,
+        "attributePerEventCountLimit": 128,
+        "attributePerLinkCountLimit": 128
+      },
+      "_spanProcessor": "[Cannot stringify: Converting circular structure to JSON\n    --> starting at object with constructor 'DerivedLogger'\n    |     property '_readableState' -> object with constructor 'ReadableState'\n    |     property 'pipes' -> object with constructor 'Console'\n    --- property 'parent' closes the circle]",
+      "_attributeValueLengthLimit": null
+    },
+    {
+      "attributes": {
+        "http.url": "http://localhost:5678/assets/useExecutionHelpers-Bet0YWvb.js",
+        "http.host": "localhost:5678",
+        "net.host.name": "localhost",
+        "http.method": "GET",
+        "http.scheme": "http",
+        "http.target": "/assets/useExecutionHelpers-Bet0YWvb.js",
+        "http.user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36",
+        "http.flavor": "1.1",
+        "net.transport": "ip_tcp",
+        "net.host.ip": "172.18.0.3",
+        "net.host.port": 5678,
+        "net.peer.ip": "172.18.0.1",
+        "net.peer.port": 65228,
+        "http.status_code": 200,
+        "http.status_text": "OK"
+      },
+      "links": [],
+      "events": [],
+      "_droppedAttributesCount": 0,
+      "_droppedEventsCount": 0,
+      "_droppedLinksCount": 0,
+      "status": {
+        "code": 0
+      },
+      "endTime": [
+        1745583802,
+        453433083
+      ],
+      "_ended": true,
+      "_duration": [
+        0,
+        107433083
+      ],
+      "name": "GET",
+      "_spanContext": {
+        "traceId": "bce1ae95ca2cff75356a3287069e77f3",
+        "spanId": "3a5cd6ddcc4fe546",
+        "traceFlags": 1
+      },
+      "kind": 1,
+      "_performanceStartTime": 361479.729707,
+      "_performanceOffset": 0.836181640625,
+      "_startTimeProvided": false,
+      "startTime": [
+        1745583802,
+        346000000
+      ],
+      "resource": {
+        "_attributes": {
+          "service.name": "n8n",
+          "telemetry.sdk.language": "nodejs",
+          "telemetry.sdk.name": "opentelemetry",
+          "telemetry.sdk.version": "1.13.0",
+          "service.version": "1.89.2",
+          "deployment.environment": "production",
+          "n8n.version": "1.89.2",
+          "n8n.instance_id": "default",
+          "process.pid": 7,
+          "process.executable.name": "node",
+          "process.executable.path": "/usr/local/bin/node",
+          "process.command_args": [
+            "/usr/local/bin/node",
+            "--require",
+            "/usr/local/lib/node_modules/n8n/tracing.js",
+            "/usr/local/bin/n8n"
+          ],
+          "process.runtime.version": "20.19.0",
+          "process.runtime.name": "nodejs",
+          "process.runtime.description": "Node.js",
+          "process.command": "/usr/local/bin/n8n",
+          "process.owner": "node"
+        },
+        "asyncAttributesPending": false,
+        "_syncAttributes": {
+          "service.name": "n8n",
+          "telemetry.sdk.language": "nodejs",
+          "telemetry.sdk.name": "opentelemetry",
+          "telemetry.sdk.version": "1.13.0",
+          "service.version": "1.89.2",
+          "deployment.environment": "production",
+          "n8n.version": "1.89.2",
+          "n8n.instance_id": "default"
+        },
+        "_asyncAttributesPromise": {}
+      },
+      "instrumentationLibrary": {
+        "name": "@opentelemetry/instrumentation-http",
+        "version": "0.39.1"
+      },
+      "_spanLimits": {
+        "attributeValueLengthLimit": null,
+        "attributeCountLimit": 128,
+        "linkCountLimit": 128,
+        "eventCountLimit": 128,
+        "attributePerEventCountLimit": 128,
+        "attributePerLinkCountLimit": 128
+      },
+      "_spanProcessor": "[Cannot stringify: Converting circular structure to JSON\n    --> starting at object with constructor 'DerivedLogger'\n    |     property '_readableState' -> object with constructor 'ReadableState'\n    |     property 'pipes' -> object with constructor 'Console'\n    --- property 'parent' closes the circle]",
+      "_attributeValueLengthLimit": null
+    },
+    {
+      "attributes": {
+        "http.url": "http://localhost:5678/assets/dateFormatter-DP26ifk_.js",
+        "http.host": "localhost:5678",
+        "net.host.name": "localhost",
+        "http.method": "GET",
+        "http.scheme": "http",
+        "http.target": "/assets/dateFormatter-DP26ifk_.js",
+        "http.user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36",
+        "http.flavor": "1.1",
+        "net.transport": "ip_tcp",
+        "net.host.ip": "172.18.0.3",
+        "net.host.port": 5678,
+        "net.peer.ip": "172.18.0.1",
+        "net.peer.port": 65214,
+        "http.status_code": 200,
+        "http.status_text": "OK"
+      },
+      "links": [],
+      "events": [],
+      "_droppedAttributesCount": 0,
+      "_droppedEventsCount": 0,
+      "_droppedLinksCount": 0,
+      "status": {
+        "code": 0
+      },
+      "endTime": [
+        1745583802,
+        453690125
+      ],
+      "_ended": true,
+      "_duration": [
+        0,
+        96690125
+      ],
+      "name": "GET",
+      "_spanContext": {
+        "traceId": "3b677b957cfd6c4e28a4ac2fb92d27da",
+        "spanId": "2b9cec30da6eb7ee",
+        "traceFlags": 1
+      },
+      "kind": 1,
+      "_performanceStartTime": 361491.092374,
+      "_performanceOffset": 0.4736328125,
+      "_startTimeProvided": false,
+      "startTime": [
+        1745583802,
+        357000000
+      ],
+      "resource": {
+        "_attributes": {
+          "service.name": "n8n",
+          "telemetry.sdk.language": "nodejs",
+          "telemetry.sdk.name": "opentelemetry",
+          "telemetry.sdk.version": "1.13.0",
+          "service.version": "1.89.2",
+          "deployment.environment": "production",
+          "n8n.version": "1.89.2",
+          "n8n.instance_id": "default",
+          "process.pid": 7,
+          "process.executable.name": "node",
+          "process.executable.path": "/usr/local/bin/node",
+          "process.command_args": [
+            "/usr/local/bin/node",
+            "--require",
+            "/usr/local/lib/node_modules/n8n/tracing.js",
+            "/usr/local/bin/n8n"
+          ],
+          "process.runtime.version": "20.19.0",
+          "process.runtime.name": "nodejs",
+          "process.runtime.description": "Node.js",
+          "process.command": "/usr/local/bin/n8n",
+          "process.owner": "node"
+        },
+        "asyncAttributesPending": false,
+        "_syncAttributes": {
+          "service.name": "n8n",
+          "telemetry.sdk.language": "nodejs",
+          "telemetry.sdk.name": "opentelemetry",
+          "telemetry.sdk.version": "1.13.0",
+          "service.version": "1.89.2",
+          "deployment.environment": "production",
+          "n8n.version": "1.89.2",
+          "n8n.instance_id": "default"
+        },
+        "_asyncAttributesPromise": {}
+      },
+      "instrumentationLibrary": {
+        "name": "@opentelemetry/instrumentation-http",
+        "version": "0.39.1"
+      },
+      "_spanLimits": {
+        "attributeValueLengthLimit": null,
+        "attributeCountLimit": 128,
+        "linkCountLimit": 128,
+        "eventCountLimit": 128,
+        "attributePerEventCountLimit": 128,
+        "attributePerLinkCountLimit": 128
+      },
+      "_spanProcessor": "[Cannot stringify: Converting circular structure to JSON\n    --> starting at object with constructor 'DerivedLogger'\n    |     property '_readableState' -> object with constructor 'ReadableState'\n    |     property 'pipes' -> object with constructor 'Console'\n    --- property 'parent' closes the circle]",
+      "_attributeValueLengthLimit": null
+    },
+    {
+      "attributes": {
+        "http.url": "http://localhost:5678/assets/RunDataAi-DsidSvp-.js",
+        "http.host": "localhost:5678",
+        "net.host.name": "localhost",
+        "http.method": "GET",
+        "http.scheme": "http",
+        "http.target": "/assets/RunDataAi-DsidSvp-.js",
+        "http.user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36",
+        "http.flavor": "1.1",
+        "net.transport": "ip_tcp",
+        "net.host.ip": "172.18.0.3",
+        "net.host.port": 5678,
+        "net.peer.ip": "172.18.0.1",
+        "net.peer.port": 65242,
+        "http.status_code": 200,
+        "http.status_text": "OK"
+      },
+      "links": [],
+      "events": [],
+      "_droppedAttributesCount": 0,
+      "_droppedEventsCount": 0,
+      "_droppedLinksCount": 0,
+      "status": {
+        "code": 0
+      },
+      "endTime": [
+        1745583802,
+        454618250
+      ],
+      "_ended": true,
+      "_duration": [
+        0,
+        109618250
+      ],
+      "name": "GET",
+      "_spanContext": {
+        "traceId": "9e26de88ad41e21201e9ca655522f1f3",
+        "spanId": "e0024e9d3a3ebfb0",
+        "traceFlags": 1
+      },
+      "kind": 1,
+      "_performanceStartTime": 361478.464957,
+      "_performanceOffset": 1.10107421875,
+      "_startTimeProvided": false,
+      "startTime": [
+        1745583802,
+        345000000
+      ],
+      "resource": {
+        "_attributes": {
+          "service.name": "n8n",
+          "telemetry.sdk.language": "nodejs",
+          "telemetry.sdk.name": "opentelemetry",
+          "telemetry.sdk.version": "1.13.0",
+          "service.version": "1.89.2",
+          "deployment.environment": "production",
+          "n8n.version": "1.89.2",
+          "n8n.instance_id": "default",
+          "process.pid": 7,
+          "process.executable.name": "node",
+          "process.executable.path": "/usr/local/bin/node",
+          "process.command_args": [
+            "/usr/local/bin/node",
+            "--require",
+            "/usr/local/lib/node_modules/n8n/tracing.js",
+            "/usr/local/bin/n8n"
+          ],
+          "process.runtime.version": "20.19.0",
+          "process.runtime.name": "nodejs",
+          "process.runtime.description": "Node.js",
+          "process.command": "/usr/local/bin/n8n",
+          "process.owner": "node"
+        },
+        "asyncAttributesPending": false,
+        "_syncAttributes": {
+          "service.name": "n8n",
+          "telemetry.sdk.language": "nodejs",
+          "telemetry.sdk.name": "opentelemetry",
+          "telemetry.sdk.version": "1.13.0",
+          "service.version": "1.89.2",
+          "deployment.environment": "production",
+          "n8n.version": "1.89.2",
+          "n8n.instance_id": "default"
+        },
+        "_asyncAttributesPromise": {}
+      },
+      "instrumentationLibrary": {
+        "name": "@opentelemetry/instrumentation-http",
+        "version": "0.39.1"
+      },
+      "_spanLimits": {
+        "attributeValueLengthLimit": null,
+        "attributeCountLimit": 128,
+        "linkCountLimit": 128,
+        "eventCountLimit": 128,
+        "attributePerEventCountLimit": 128,
+        "attributePerLinkCountLimit": 128
+      },
+      "_spanProcessor": "[Cannot stringify: Converting circular structure to JSON\n    --> starting at object with constructor 'DerivedLogger'\n    |     property '_readableState' -> object with constructor 'ReadableState'\n    |     property 'pipes' -> object with constructor 'Console'\n    --- property 'parent' closes the circle]",
+      "_attributeValueLengthLimit": null
+    },
+    {
+      "attributes": {
+        "http.url": "http://localhost:5678/assets/CanvasChatSwitch-B5IdrA6Q.js",
+        "http.host": "localhost:5678",
+        "net.host.name": "localhost",
+        "http.method": "GET",
+        "http.scheme": "http",
+        "http.target": "/assets/CanvasChatSwitch-B5IdrA6Q.js",
+        "http.user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36",
+        "http.flavor": "1.1",
+        "net.transport": "ip_tcp",
+        "net.host.ip": "172.18.0.3",
+        "net.host.port": 5678,
+        "net.peer.ip": "172.18.0.1",
+        "net.peer.port": 65212,
+        "http.status_code": 200,
+        "http.status_text": "OK"
+      },
+      "links": [],
+      "events": [],
+      "_droppedAttributesCount": 0,
+      "_droppedEventsCount": 0,
+      "_droppedLinksCount": 0,
+      "status": {
+        "code": 0
+      },
+      "endTime": [
+        1745583802,
+        458457625
+      ],
+      "_ended": true,
+      "_duration": [
+        0,
+        197457625
+      ],
+      "name": "GET",
+      "_spanContext": {
+        "traceId": "b38cd52eedeffe70ac99c3e502560c86",
+        "spanId": "42896bb566176ebc",
+        "traceFlags": 1
+      },
+      "kind": 1,
+      "_performanceStartTime": 361394.140957,
+      "_performanceOffset": 1.425048828125,
+      "_startTimeProvided": false,
+      "startTime": [
+        1745583802,
+        261000000
+      ],
+      "resource": {
+        "_attributes": {
+          "service.name": "n8n",
+          "telemetry.sdk.language": "nodejs",
+          "telemetry.sdk.name": "opentelemetry",
+          "telemetry.sdk.version": "1.13.0",
+          "service.version": "1.89.2",
+          "deployment.environment": "production",
+          "n8n.version": "1.89.2",
+          "n8n.instance_id": "default",
+          "process.pid": 7,
+          "process.executable.name": "node",
+          "process.executable.path": "/usr/local/bin/node",
+          "process.command_args": [
+            "/usr/local/bin/node",
+            "--require",
+            "/usr/local/lib/node_modules/n8n/tracing.js",
+            "/usr/local/bin/n8n"
+          ],
+          "process.runtime.version": "20.19.0",
+          "process.runtime.name": "nodejs",
+          "process.runtime.description": "Node.js",
+          "process.command": "/usr/local/bin/n8n",
+          "process.owner": "node"
+        },
+        "asyncAttributesPending": false,
+        "_syncAttributes": {
+          "service.name": "n8n",
+          "telemetry.sdk.language": "nodejs",
+          "telemetry.sdk.name": "opentelemetry",
+          "telemetry.sdk.version": "1.13.0",
+          "service.version": "1.89.2",
+          "deployment.environment": "production",
+          "n8n.version": "1.89.2",
+          "n8n.instance_id": "default"
+        },
+        "_asyncAttributesPromise": {}
+      },
+      "instrumentationLibrary": {
+        "name": "@opentelemetry/instrumentation-http",
+        "version": "0.39.1"
+      },
+      "_spanLimits": {
+        "attributeValueLengthLimit": null,
+        "attributeCountLimit": 128,
+        "linkCountLimit": 128,
+        "eventCountLimit": 128,
+        "attributePerEventCountLimit": 128,
+        "attributePerLinkCountLimit": 128
+      },
+      "_spanProcessor": "[Cannot stringify: Converting circular structure to JSON\n    --> starting at object with constructor 'DerivedLogger'\n    |     property '_readableState' -> object with constructor 'ReadableState'\n    |     property 'pipes' -> object with constructor 'Console'\n    --- property 'parent' closes the circle]",
+      "_attributeValueLengthLimit": null
+    },
+    {
+      "attributes": {
+        "http.url": "http://localhost:5678/assets/InterVariable-DiVDrmQJ.woff2",
+        "http.host": "localhost:5678",
+        "net.host.name": "localhost",
+        "http.method": "GET",
+        "http.scheme": "http",
+        "http.target": "/assets/InterVariable-DiVDrmQJ.woff2",
+        "http.user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36",
+        "http.flavor": "1.1",
+        "net.transport": "ip_tcp",
+        "net.host.ip": "172.18.0.3",
+        "net.host.port": 5678,
+        "net.peer.ip": "172.18.0.1",
+        "net.peer.port": 56614,
+        "http.status_code": 304,
+        "http.status_text": "NOT MODIFIED"
+      },
+      "links": [],
+      "events": [],
+      "_droppedAttributesCount": 0,
+      "_droppedEventsCount": 0,
+      "_droppedLinksCount": 0,
+      "status": {
+        "code": 0
+      },
+      "endTime": [
+        1745583802,
+        567418458
+      ],
+      "_ended": true,
+      "_duration": [
+        0,
+        11418458
+      ],
+      "name": "GET",
+      "_spanContext": {
+        "traceId": "5d0b07449335f0d0aa871ac99628dd5f",
+        "spanId": "5929ad6ca6427239",
+        "traceFlags": 1
+      },
+      "kind": 1,
+      "_performanceStartTime": 361689.538249,
+      "_performanceOffset": 1.027587890625,
+      "_startTimeProvided": false,
+      "startTime": [
+        1745583802,
+        556000000
+      ],
+      "resource": {
+        "_attributes": {
+          "service.name": "n8n",
+          "telemetry.sdk.language": "nodejs",
+          "telemetry.sdk.name": "opentelemetry",
+          "telemetry.sdk.version": "1.13.0",
+          "service.version": "1.89.2",
+          "deployment.environment": "production",
+          "n8n.version": "1.89.2",
+          "n8n.instance_id": "default",
+          "process.pid": 7,
+          "process.executable.name": "node",
+          "process.executable.path": "/usr/local/bin/node",
+          "process.command_args": [
+            "/usr/local/bin/node",
+            "--require",
+            "/usr/local/lib/node_modules/n8n/tracing.js",
+            "/usr/local/bin/n8n"
+          ],
+          "process.runtime.version": "20.19.0",
+          "process.runtime.name": "nodejs",
+          "process.runtime.description": "Node.js",
+          "process.command": "/usr/local/bin/n8n",
+          "process.owner": "node"
+        },
+        "asyncAttributesPending": false,
+        "_syncAttributes": {
+          "service.name": "n8n",
+          "telemetry.sdk.language": "nodejs",
+          "telemetry.sdk.name": "opentelemetry",
+          "telemetry.sdk.version": "1.13.0",
+          "service.version": "1.89.2",
+          "deployment.environment": "production",
+          "n8n.version": "1.89.2",
+          "n8n.instance_id": "default"
+        },
+        "_asyncAttributesPromise": {}
+      },
+      "instrumentationLibrary": {
+        "name": "@opentelemetry/instrumentation-http",
+        "version": "0.39.1"
+      },
+      "_spanLimits": {
+        "attributeValueLengthLimit": null,
+        "attributeCountLimit": 128,
+        "linkCountLimit": 128,
+        "eventCountLimit": 128,
+        "attributePerEventCountLimit": 128,
+        "attributePerLinkCountLimit": 128
+      },
+      "_spanProcessor": "[Cannot stringify: Converting circular structure to JSON\n    --> starting at object with constructor 'DerivedLogger'\n    |     property '_readableState' -> object with constructor 'ReadableState'\n    |     property 'pipes' -> object with constructor 'Console'\n    --- property 'parent' closes the circle]",
+      "_attributeValueLengthLimit": null
+    },
+    {
+      "attributes": {
+        "http.url": "http://localhost:5678/assets/buttons.esm-BOkmSohe.js",
+        "http.host": "localhost:5678",
+        "net.host.name": "localhost",
+        "http.method": "GET",
+        "http.scheme": "http",
+        "http.target": "/assets/buttons.esm-BOkmSohe.js",
+        "http.user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36",
+        "http.flavor": "1.1",
+        "net.transport": "ip_tcp",
+        "net.host.ip": "172.18.0.3",
+        "net.host.port": 5678,
+        "net.peer.ip": "172.18.0.1",
+        "net.peer.port": 56610,
+        "http.status_code": 200,
+        "http.status_text": "OK"
+      },
+      "links": [],
+      "events": [],
+      "_droppedAttributesCount": 0,
+      "_droppedEventsCount": 0,
+      "_droppedLinksCount": 0,
+      "status": {
+        "code": 0
+      },
+      "endTime": [
+        1745583802,
+        571031667
+      ],
+      "_ended": true,
+      "_duration": [
+        0,
+        16031667
+      ],
+      "name": "GET",
+      "_spanContext": {
+        "traceId": "33d9086e834cd24c0c904378e3dc0ed8",
+        "spanId": "92724bd296956f87",
+        "traceFlags": 1
+      },
+      "kind": 1,
+      "_performanceStartTime": 361688.517249,
+      "_performanceOffset": 1.048583984375,
+      "_startTimeProvided": false,
+      "startTime": [
+        1745583802,
+        555000000
+      ],
+      "resource": {
+        "_attributes": {
+          "service.name": "n8n",
+          "telemetry.sdk.language": "nodejs",
+          "telemetry.sdk.name": "opentelemetry",
+          "telemetry.sdk.version": "1.13.0",
+          "service.version": "1.89.2",
+          "deployment.environment": "production",
+          "n8n.version": "1.89.2",
+          "n8n.instance_id": "default",
+          "process.pid": 7,
+          "process.executable.name": "node",
+          "process.executable.path": "/usr/local/bin/node",
+          "process.command_args": [
+            "/usr/local/bin/node",
+            "--require",
+            "/usr/local/lib/node_modules/n8n/tracing.js",
+            "/usr/local/bin/n8n"
+          ],
+          "process.runtime.version": "20.19.0",
+          "process.runtime.name": "nodejs",
+          "process.runtime.description": "Node.js",
+          "process.command": "/usr/local/bin/n8n",
+          "process.owner": "node"
+        },
+        "asyncAttributesPending": false,
+        "_syncAttributes": {
+          "service.name": "n8n",
+          "telemetry.sdk.language": "nodejs",
+          "telemetry.sdk.name": "opentelemetry",
+          "telemetry.sdk.version": "1.13.0",
+          "service.version": "1.89.2",
+          "deployment.environment": "production",
+          "n8n.version": "1.89.2",
+          "n8n.instance_id": "default"
+        },
+        "_asyncAttributesPromise": {}
+      },
+      "instrumentationLibrary": {
+        "name": "@opentelemetry/instrumentation-http",
+        "version": "0.39.1"
+      },
+      "_spanLimits": {
+        "attributeValueLengthLimit": null,
+        "attributeCountLimit": 128,
+        "linkCountLimit": 128,
+        "eventCountLimit": 128,
+        "attributePerEventCountLimit": 128,
+        "attributePerLinkCountLimit": 128
+      },
+      "_spanProcessor": "[Cannot stringify: Converting circular structure to JSON\n    --> starting at object with constructor 'DerivedLogger'\n    |     property '_readableState' -> object with constructor 'ReadableState'\n    |     property 'pipes' -> object with constructor 'Console'\n    --- property 'parent' closes the circle]",
+      "_attributeValueLengthLimit": null
+    },
+    {
+      "attributes": {
+        "http.url": "http://localhost:5678/rest/active-workflows",
+        "http.host": "localhost:5678",
+        "net.host.name": "localhost",
+        "http.method": "GET",
+        "http.scheme": "http",
+        "http.target": "/rest/active-workflows",
+        "http.user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36",
+        "http.flavor": "1.1",
+        "net.transport": "ip_tcp",
+        "net.host.ip": "172.18.0.3",
+        "net.host.port": 5678,
+        "net.peer.ip": "172.18.0.1",
+        "net.peer.port": 65212,
+        "http.status_code": 304,
+        "http.status_text": "NOT MODIFIED"
+      },
+      "links": [],
+      "events": [],
+      "_droppedAttributesCount": 0,
+      "_droppedEventsCount": 0,
+      "_droppedLinksCount": 0,
+      "status": {
+        "code": 0
+      },
+      "endTime": [
+        1745583802,
+        586448333
+      ],
+      "_ended": true,
+      "_duration": [
+        0,
+        39448333
+      ],
+      "name": "GET",
+      "_spanContext": {
+        "traceId": "e44caf2d5c7036b707c3737f615c5275",
+        "spanId": "914718cde3907c93",
+        "traceFlags": 1
+      },
+      "kind": 1,
+      "_performanceStartTime": 361680.381999,
+      "_performanceOffset": 1.183837890625,
+      "_startTimeProvided": false,
+      "startTime": [
+        1745583802,
+        547000000
+      ],
+      "resource": {
+        "_attributes": {
+          "service.name": "n8n",
+          "telemetry.sdk.language": "nodejs",
+          "telemetry.sdk.name": "opentelemetry",
+          "telemetry.sdk.version": "1.13.0",
+          "service.version": "1.89.2",
+          "deployment.environment": "production",
+          "n8n.version": "1.89.2",
+          "n8n.instance_id": "default",
+          "process.pid": 7,
+          "process.executable.name": "node",
+          "process.executable.path": "/usr/local/bin/node",
+          "process.command_args": [
+            "/usr/local/bin/node",
+            "--require",
+            "/usr/local/lib/node_modules/n8n/tracing.js",
+            "/usr/local/bin/n8n"
+          ],
+          "process.runtime.version": "20.19.0",
+          "process.runtime.name": "nodejs",
+          "process.runtime.description": "Node.js",
+          "process.command": "/usr/local/bin/n8n",
+          "process.owner": "node"
+        },
+        "asyncAttributesPending": false,
+        "_syncAttributes": {
+          "service.name": "n8n",
+          "telemetry.sdk.language": "nodejs",
+          "telemetry.sdk.name": "opentelemetry",
+          "telemetry.sdk.version": "1.13.0",
+          "service.version": "1.89.2",
+          "deployment.environment": "production",
+          "n8n.version": "1.89.2",
+          "n8n.instance_id": "default"
+        },
+        "_asyncAttributesPromise": {}
+      },
+      "instrumentationLibrary": {
+        "name": "@opentelemetry/instrumentation-http",
+        "version": "0.39.1"
+      },
+      "_spanLimits": {
+        "attributeValueLengthLimit": null,
+        "attributeCountLimit": 128,
+        "linkCountLimit": 128,
+        "eventCountLimit": 128,
+        "attributePerEventCountLimit": 128,
+        "attributePerLinkCountLimit": 128
+      },
+      "_spanProcessor": "[Cannot stringify: Converting circular structure to JSON\n    --> starting at object with constructor 'DerivedLogger'\n    |     property '_readableState' -> object with constructor 'ReadableState'\n    |     property 'pipes' -> object with constructor 'Console'\n    --- property 'parent' closes the circle]",
+      "_attributeValueLengthLimit": null
+    },
+    {
+      "attributes": {
+        "http.url": "http://localhost:5678/types/credentials.json",
+        "http.host": "localhost:5678",
+        "net.host.name": "localhost",
+        "http.method": "GET",
+        "http.scheme": "http",
+        "http.target": "/types/credentials.json",
+        "http.user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36",
+        "http.flavor": "1.1",
+        "net.transport": "ip_tcp",
+        "net.host.ip": "172.18.0.3",
+        "net.host.port": 5678,
+        "net.peer.ip": "172.18.0.1",
+        "net.peer.port": 65242,
+        "http.status_code": 200,
+        "http.status_text": "OK"
+      },
+      "links": [],
+      "events": [],
+      "_droppedAttributesCount": 0,
+      "_droppedEventsCount": 0,
+      "_droppedLinksCount": 0,
+      "status": {
+        "code": 0
+      },
+      "endTime": [
+        1745583802,
+        587767458
+      ],
+      "_ended": true,
+      "_duration": [
+        0,
+        38767458
+      ],
+      "name": "GET",
+      "_spanContext": {
+        "traceId": "2d9368c54628f761105c06f767e3a063",
+        "spanId": "9430c3e5db07985c",
+        "traceFlags": 1
+      },
+      "kind": 1,
+      "_performanceStartTime": 361682.236124,
+      "_performanceOffset": 1.329833984375,
+      "_startTimeProvided": false,
+      "startTime": [
+        1745583802,
+        549000000
+      ],
+      "resource": {
+        "_attributes": {
+          "service.name": "n8n",
+          "telemetry.sdk.language": "nodejs",
+          "telemetry.sdk.name": "opentelemetry",
+          "telemetry.sdk.version": "1.13.0",
+          "service.version": "1.89.2",
+          "deployment.environment": "production",
+          "n8n.version": "1.89.2",
+          "n8n.instance_id": "default",
+          "process.pid": 7,
+          "process.executable.name": "node",
+          "process.executable.path": "/usr/local/bin/node",
+          "process.command_args": [
+            "/usr/local/bin/node",
+            "--require",
+            "/usr/local/lib/node_modules/n8n/tracing.js",
+            "/usr/local/bin/n8n"
+          ],
+          "process.runtime.version": "20.19.0",
+          "process.runtime.name": "nodejs",
+          "process.runtime.description": "Node.js",
+          "process.command": "/usr/local/bin/n8n",
+          "process.owner": "node"
+        },
+        "asyncAttributesPending": false,
+        "_syncAttributes": {
+          "service.name": "n8n",
+          "telemetry.sdk.language": "nodejs",
+          "telemetry.sdk.name": "opentelemetry",
+          "telemetry.sdk.version": "1.13.0",
+          "service.version": "1.89.2",
+          "deployment.environment": "production",
+          "n8n.version": "1.89.2",
+          "n8n.instance_id": "default"
+        },
+        "_asyncAttributesPromise": {}
+      },
+      "instrumentationLibrary": {
+        "name": "@opentelemetry/instrumentation-http",
+        "version": "0.39.1"
+      },
+      "_spanLimits": {
+        "attributeValueLengthLimit": null,
+        "attributeCountLimit": 128,
+        "linkCountLimit": 128,
+        "eventCountLimit": 128,
+        "attributePerEventCountLimit": 128,
+        "attributePerLinkCountLimit": 128
+      },
+      "_spanProcessor": "[Cannot stringify: Converting circular structure to JSON\n    --> starting at object with constructor 'DerivedLogger'\n    |     property '_readableState' -> object with constructor 'ReadableState'\n    |     property 'pipes' -> object with constructor 'Console'\n    --- property 'parent' closes the circle]",
+      "_attributeValueLengthLimit": null
+    },
+    {
+      "attributes": {
+        "http.url": "http://localhost:5678/rest/credentials?includeScopes=true&includeData=true",
+        "http.host": "localhost:5678",
+        "net.host.name": "localhost",
+        "http.method": "GET",
+        "http.scheme": "http",
+        "http.target": "/rest/credentials?includeScopes=true&includeData=true",
+        "http.user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36",
+        "http.flavor": "1.1",
+        "net.transport": "ip_tcp",
+        "net.host.ip": "172.18.0.3",
+        "net.host.port": 5678,
+        "net.peer.ip": "172.18.0.1",
+        "net.peer.port": 65214,
+        "http.status_code": 304,
+        "http.status_text": "NOT MODIFIED"
+      },
+      "links": [],
+      "events": [],
+      "_droppedAttributesCount": 0,
+      "_droppedEventsCount": 0,
+      "_droppedLinksCount": 0,
+      "status": {
+        "code": 0
+      },
+      "endTime": [
+        1745583802,
+        591794833
+      ],
+      "_ended": true,
+      "_duration": [
+        0,
+        80794833
+      ],
+      "name": "GET",
+      "_spanContext": {
+        "traceId": "7f75ef10eaf174f1cce9acb23b052a3a",
+        "spanId": "1a4a1317ed19a49c",
+        "traceFlags": 1
+      },
+      "kind": 1,
+      "_performanceStartTime": 361644.692749,
+      "_performanceOffset": 0.873291015625,
+      "_startTimeProvided": false,
+      "startTime": [
+        1745583802,
+        511000000
+      ],
+      "resource": {
+        "_attributes": {
+          "service.name": "n8n",
+          "telemetry.sdk.language": "nodejs",
+          "telemetry.sdk.name": "opentelemetry",
+          "telemetry.sdk.version": "1.13.0",
+          "service.version": "1.89.2",
+          "deployment.environment": "production",
+          "n8n.version": "1.89.2",
+          "n8n.instance_id": "default",
+          "process.pid": 7,
+          "process.executable.name": "node",
+          "process.executable.path": "/usr/local/bin/node",
+          "process.command_args": [
+            "/usr/local/bin/node",
+            "--require",
+            "/usr/local/lib/node_modules/n8n/tracing.js",
+            "/usr/local/bin/n8n"
+          ],
+          "process.runtime.version": "20.19.0",
+          "process.runtime.name": "nodejs",
+          "process.runtime.description": "Node.js",
+          "process.command": "/usr/local/bin/n8n",
+          "process.owner": "node"
+        },
+        "asyncAttributesPending": false,
+        "_syncAttributes": {
+          "service.name": "n8n",
+          "telemetry.sdk.language": "nodejs",
+          "telemetry.sdk.name": "opentelemetry",
+          "telemetry.sdk.version": "1.13.0",
+          "service.version": "1.89.2",
+          "deployment.environment": "production",
+          "n8n.version": "1.89.2",
+          "n8n.instance_id": "default"
+        },
+        "_asyncAttributesPromise": {}
+      },
+      "instrumentationLibrary": {
+        "name": "@opentelemetry/instrumentation-http",
+        "version": "0.39.1"
+      },
+      "_spanLimits": {
+        "attributeValueLengthLimit": null,
+        "attributeCountLimit": 128,
+        "linkCountLimit": 128,
+        "eventCountLimit": 128,
+        "attributePerEventCountLimit": 128,
+        "attributePerLinkCountLimit": 128
+      },
+      "_spanProcessor": "[Cannot stringify: Converting circular structure to JSON\n    --> starting at object with constructor 'DerivedLogger'\n    |     property '_readableState' -> object with constructor 'ReadableState'\n    |     property 'pipes' -> object with constructor 'Console'\n    --- property 'parent' closes the circle]",
+      "_attributeValueLengthLimit": null
+    }
+  ]
+}

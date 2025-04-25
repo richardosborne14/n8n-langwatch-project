@@ -1,0 +1,174 @@
+{
+  "trace_id": "5fae5e66fd6a0fd6eabdb4906d0ffaf5",
+  "spans": [
+    {
+      "span_id": "253cbc6049a1b7fe",
+      "trace_id": "5fae5e66fd6a0fd6eabdb4906d0ffaf5",
+      "name": "POST",
+      "kind": 2,
+      "start_time": [
+        1745586673,
+        8000000
+      ],
+      "end_time": [
+        1745586704,
+        624843681
+      ],
+      "duration_ms": null,
+      "status": {
+        "code": 2,
+        "message": "socket hang up"
+      },
+      "attributes": {
+        "http.url": "https://telemetry.n8n.io/v1/batch",
+        "http.method": "POST",
+        "http.target": "/v1/batch",
+        "net.peer.name": "telemetry.n8n.io",
+        "http.host": "telemetry.n8n.io:443",
+        "http.user_agent": "analytics-node/2.0.9",
+        "http.error_name": "Error",
+        "http.error_message": "socket hang up"
+      },
+      "events": [
+        {
+          "name": "exception",
+          "attributes": {
+            "exception.type": "ECONNRESET",
+            "exception.message": "socket hang up",
+            "exception.stacktrace": "Error: socket hang up\n    at TLSSocket.socketCloseListener (node:_http_client:477:27)\n    at TLSSocket.emit (node:events:536:35)\n    at node:net:343:12\n    at TCP.done (node:_tls_wrap:648:7)\n    at TCP.callbackTrampoline (node:internal/async_hooks:130:17)"
+          },
+          "time": [
+            1745586704,
+            624833514
+          ],
+          "droppedAttributesCount": 0
+        }
+      ],
+      "links": []
+    }
+  ],
+  "metadata": {
+    "service": "n8n",
+    "timestamp": 1745586705629,
+    "span_count": 1,
+    "workflow_span_count": 0,
+    "node_span_count": 0,
+    "workflow_id": null,
+    "workflow_name": null,
+    "environment": "production",
+    "n8n_version": "1.89.2"
+  },
+  "workflow_execution": null,
+  "raw_spans": [
+    {
+      "attributes": {
+        "http.url": "https://telemetry.n8n.io/v1/batch",
+        "http.method": "POST",
+        "http.target": "/v1/batch",
+        "net.peer.name": "telemetry.n8n.io",
+        "http.host": "telemetry.n8n.io:443",
+        "http.user_agent": "analytics-node/2.0.9",
+        "http.error_name": "Error",
+        "http.error_message": "socket hang up"
+      },
+      "links": [],
+      "events": [
+        {
+          "name": "exception",
+          "attributes": {
+            "exception.type": "ECONNRESET",
+            "exception.message": "socket hang up",
+            "exception.stacktrace": "Error: socket hang up\n    at TLSSocket.socketCloseListener (node:_http_client:477:27)\n    at TLSSocket.emit (node:events:536:35)\n    at node:net:343:12\n    at TCP.done (node:_tls_wrap:648:7)\n    at TCP.callbackTrampoline (node:internal/async_hooks:130:17)"
+          },
+          "time": [
+            1745586704,
+            624833514
+          ],
+          "droppedAttributesCount": 0
+        }
+      ],
+      "_droppedAttributesCount": 0,
+      "_droppedEventsCount": 0,
+      "_droppedLinksCount": 0,
+      "status": {
+        "code": 2,
+        "message": "socket hang up"
+      },
+      "endTime": [
+        1745586704,
+        624843681
+      ],
+      "_ended": true,
+      "_duration": [
+        31,
+        616843681
+      ],
+      "name": "POST",
+      "_spanContext": {
+        "traceId": "5fae5e66fd6a0fd6eabdb4906d0ffaf5",
+        "spanId": "253cbc6049a1b7fe",
+        "traceFlags": 1
+      },
+      "kind": 2,
+      "_performanceStartTime": 278746.569335,
+      "_performanceOffset": -1.121337890625,
+      "_startTimeProvided": false,
+      "startTime": [
+        1745586673,
+        8000000
+      ],
+      "resource": {
+        "_attributes": {
+          "service.name": "n8n",
+          "telemetry.sdk.language": "nodejs",
+          "telemetry.sdk.name": "opentelemetry",
+          "telemetry.sdk.version": "1.13.0",
+          "service.version": "1.89.2",
+          "deployment.environment": "production",
+          "n8n.version": "1.89.2",
+          "n8n.instance_id": "default",
+          "process.pid": 7,
+          "process.executable.name": "node",
+          "process.executable.path": "/usr/local/bin/node",
+          "process.command_args": [
+            "/usr/local/bin/node",
+            "--require",
+            "/usr/local/lib/node_modules/n8n/tracing.js",
+            "/usr/local/bin/n8n"
+          ],
+          "process.runtime.version": "20.19.0",
+          "process.runtime.name": "nodejs",
+          "process.runtime.description": "Node.js",
+          "process.command": "/usr/local/bin/n8n",
+          "process.owner": "node"
+        },
+        "asyncAttributesPending": false,
+        "_syncAttributes": {
+          "service.name": "n8n",
+          "telemetry.sdk.language": "nodejs",
+          "telemetry.sdk.name": "opentelemetry",
+          "telemetry.sdk.version": "1.13.0",
+          "service.version": "1.89.2",
+          "deployment.environment": "production",
+          "n8n.version": "1.89.2",
+          "n8n.instance_id": "default"
+        },
+        "_asyncAttributesPromise": {}
+      },
+      "instrumentationLibrary": {
+        "name": "@opentelemetry/instrumentation-http",
+        "version": "0.39.1"
+      },
+      "_spanLimits": {
+        "attributeValueLengthLimit": null,
+        "attributeCountLimit": 128,
+        "linkCountLimit": 128,
+        "eventCountLimit": 128,
+        "attributePerEventCountLimit": 128,
+        "attributePerLinkCountLimit": 128
+      },
+      "_spanProcessor": "[Cannot stringify: Converting circular structure to JSON\n    --> starting at object with constructor 'DerivedLogger'\n    |     property '_readableState' -> object with constructor 'ReadableState'\n    |     property 'pipes' -> object with constructor 'Console'\n    --- property 'parent' closes the circle]",
+      "_attributeValueLengthLimit": null
+    }
+  ]
+}

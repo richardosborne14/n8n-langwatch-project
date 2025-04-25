@@ -49,7 +49,7 @@ const server = http.createServer((req, res) => {
           console.log('\n=== WORKFLOW EXECUTION ===');
           console.log(`Workflow ID: ${data.workflow_execution.id}`);
           console.log(`Workflow Name: ${data.workflow_execution.name}`);
-          console.log(`Duration: ${data.workflow_execution.duration_ms.toFixed(2)}ms`);
+          console.log(`Duration: ${data.workflow_execution.duration_ms ? data.workflow_execution.duration_ms.toFixed(2) : 'unknown'}ms`);
           console.log(`Nodes: ${data.workflow_execution.nodes ? data.workflow_execution.nodes.length : 0}`);
           
           // Log node information
@@ -57,7 +57,7 @@ const server = http.createServer((req, res) => {
             console.log('\n=== NODE EXECUTIONS ===');
             data.workflow_execution.nodes.forEach((node, index) => {
               console.log(`\n[${index + 1}] ${node.name} (${node.type})`);
-              console.log(`  Duration: ${node.duration_ms.toFixed(2)}ms`);
+              console.log(`  Duration: ${node.duration_ms ? node.duration_ms.toFixed(2) : 'unknown'}ms`);
               
               // Log output summary if available
               if (node.output) {

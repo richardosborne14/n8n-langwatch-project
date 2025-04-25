@@ -59,14 +59,46 @@ class DebugExporter extends LangWatchExporter {
           return resultCallback(debugResult);
         }
         
-        // Otherwise, also send to LangWatch
-        try {
-          const traceData = this._convertSpansToLangWatchFormat(spans);
-          this._sendToLangWatch(traceData, resultCallback);
-        } catch (error) {
-          this.debugLogger.error("Error converting or sending spans to LangWatch:", error);
-          resultCallback({ code: 1, error }); // FAILED
+      // Otherwise, also send to LangWatch
+      try {
+        // Log the spans we're about to convert for LangWatch
+        this.debugLogger.debug(`Converting ${spans.length} spans for LangWatch`);
+        
+        // Check for AI node spans
+        const aiNodeSpans = spans.filter(span => {
+          const attributes = span.attributes || {};
+          return (
+            span.name === "n8n.node.execute" && 
+            (attributes["n8n.node.is_ai"] === true || 
+             attributes["n8n.node.type"]?.includes("openai") ||
+             attributes["n8n.node.type"]?.includes("gpt") ||
+             attributes["n8n.node.type"]?.includes("langchain") ||
+             attributes["n8n.node.type"]?.includes("anthropic") ||
+             attributes["n8n.node.type"]?.includes("claude") ||
+             attributes["n8n.node.type"]?.includes("llm"))
+          );
+        });
+        
+        this.debugLogger.debug(`Found ${aiNodeSpans.length} AI node spans`);
+        if (aiNodeSpans.length > 0) {
+          aiNodeSpans.forEach((span, index) => {
+            const attributes = span.attributes || {};
+            this.debugLogger.debug(`AI span ${index + 1}: ${attributes["n8n.node.name"] || "unknown"} (${attributes["n8n.node.type"] || "unknown"})`);
+          });
         }
+        
+        const traceData = this._convertSpansToLangWatchFormat(spans);
+        if (traceData && traceData.spans && traceData.spans.length > 0) {
+          this.debugLogger.debug(`Sending ${traceData.spans.length} spans to LangWatch`);
+          this._sendToLangWatch(traceData, resultCallback);
+        } else {
+          this.debugLogger.debug("No spans to send to LangWatch after conversion");
+          resultCallback({ code: 0 }); // SUCCESS
+        }
+      } catch (error) {
+        this.debugLogger.error("Error converting or sending spans to LangWatch:", error);
+        resultCallback({ code: 1, error }); // FAILED
+      }
       });
     } catch (error) {
       this.debugLogger.error("Error sending spans to debug endpoint:", error);
@@ -302,13 +334,18 @@ class DebugExporter extends LangWatchExporter {
       const workflowSpan = workflowSpans[0];
       const workflowSpanId = workflowSpan.spanContext().spanId;
       
+      // Calculate duration in milliseconds
+      const workflowDurationMs = workflowSpan.endTime && workflowSpan.startTime 
+        ? (workflowSpan.endTime - workflowSpan.startTime) / 1000000 
+        : null;
+      
       workflowHierarchy = {
         id: workflowSpan.attributes?.["n8n.workflow.id"] || "unknown",
         name: workflowSpan.attributes?.["n8n.workflow.name"] || "unknown",
         span_id: workflowSpanId,
         start_time: workflowSpan.startTime,
         end_time: workflowSpan.endTime,
-        duration_ms: (workflowSpan.endTime - workflowSpan.startTime) / 1000000,
+        duration_ms: workflowDurationMs,
         nodes: []
       };
       
@@ -320,13 +357,18 @@ class DebugExporter extends LangWatchExporter {
       
       // Add node executions to the hierarchy
       nodeExecutionSpans.forEach(nodeSpan => {
+        // Calculate node duration in milliseconds
+        const nodeDurationMs = nodeSpan.endTime && nodeSpan.startTime 
+          ? (nodeSpan.endTime - nodeSpan.startTime) / 1000000 
+          : null;
+        
         const nodeInfo = {
           name: nodeSpan.attributes?.["n8n.node.name"] || "unknown",
           type: nodeSpan.attributes?.["n8n.node.type"] || "unknown",
           span_id: nodeSpan.spanContext().spanId,
           start_time: nodeSpan.startTime,
           end_time: nodeSpan.endTime,
-          duration_ms: (nodeSpan.endTime - nodeSpan.startTime) / 1000000
+          duration_ms: nodeDurationMs
         };
         
         // Add input/output if available

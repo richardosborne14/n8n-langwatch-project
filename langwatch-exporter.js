@@ -87,101 +87,206 @@ class LangWatchExporter {
     // Use the first span's trace ID as the trace ID for the entire batch
     const traceId = spans[0].spanContext().traceId;
     
+    // Find AI node spans (these are the ones we want to send to LangWatch)
+    const aiNodeSpans = spans.filter(span => {
+      const attributes = span.attributes || {};
+      return (
+        span.name === "n8n.node.execute" && 
+        (attributes["n8n.node.is_ai"] === true || 
+         attributes["n8n.node.type"]?.includes("openai") ||
+         attributes["n8n.node.type"]?.includes("gpt") ||
+         attributes["n8n.node.type"]?.includes("langchain") ||
+         attributes["n8n.node.type"]?.includes("anthropic") ||
+         attributes["n8n.node.type"]?.includes("claude") ||
+         attributes["n8n.node.type"]?.includes("llm"))
+      );
+    });
+    
+    // Log what we found for debugging
+    this.logger.debug(`Found ${aiNodeSpans.length} AI node spans out of ${spans.length} total spans`);
+    if (aiNodeSpans.length > 0) {
+      aiNodeSpans.forEach((span, index) => {
+        const attributes = span.attributes || {};
+        this.logger.debug(`AI span ${index + 1}: ${attributes["n8n.node.name"] || "unknown"} (${attributes["n8n.node.type"] || "unknown"})`);
+      });
+    }
+    
+    // If no AI node spans found, try to find any node execution spans
+    const nodeSpans = aiNodeSpans.length > 0 ? 
+      aiNodeSpans : 
+      spans.filter(span => span.name === "n8n.node.execute");
+    
+    this.logger.debug(`Using ${nodeSpans.length} node spans for LangWatch export`);
+    
     // Convert spans to LangWatch format
-    const convertedSpans = spans.filter(span => {
+    const convertedSpans = nodeSpans.filter(span => {
       // Filter out spans with missing timestamps
       return span.startTime && span.endTime;
     }).map(span => {
       const attributes = span.attributes || {};
       const spanId = span.spanContext().spanId;
-      const name = span.name;
+      const nodeName = attributes["n8n.node.name"] || "unknown";
+      const nodeType = attributes["n8n.node.type"] || "unknown";
+      const isAI = attributes["n8n.node.is_ai"] === true || 
+                   nodeType.includes("openai") || 
+                   nodeType.includes("gpt") ||
+                   nodeType.includes("langchain") ||
+                   nodeType.includes("anthropic") ||
+                   nodeType.includes("claude") ||
+                   nodeType.includes("llm");
       
-      // Determine if this is an LLM span or a RAG span
-      const isLLMSpan = name.includes("llm") || 
-                         attributes["n8n.node.type"] === "n8n-nodes-base.openAi" ||
-                         attributes["n8n.node.type"] === "n8n-nodes-base.gpt";
-      const isRAGSpan = name.includes("rag") || 
-                         attributes["n8n.node.is_rag"] === true;
+      // Extract workflow info
+      const workflowId = attributes["n8n.workflow.id"] || null;
+      const workflowSpan = spans.find(s => 
+        s.name === "n8n.workflow.execute" && 
+        s.attributes?.["n8n.workflow.id"] === workflowId
+      );
+      const workflowName = workflowSpan?.attributes?.["n8n.workflow.name"] || 
+                          attributes["n8n.workflow.name"] || 
+                          "unknown";
       
-      // Skip spans that are neither LLM nor RAG
-      if (!isLLMSpan && !isRAGSpan) {
-        this.logger.debug(`Skipping span ${spanId} with name ${name} as it's neither LLM nor RAG`);
-        return null;
-      }
-      
-      // Basic span structure
+      // Basic span structure following LangWatch API format
       const lwSpan = {
         span_id: spanId,
-        type: isLLMSpan ? "llm" : "rag",
+        type: isAI ? "llm" : "custom",
         timestamps: {
-          started_at: Math.floor(span.startTime / 1000000), // Convert to milliseconds
-          finished_at: Math.floor(span.endTime / 1000000)   // Convert to milliseconds
-        },
-        contexts: {} // Add empty contexts object as required by API
+          started_at: Array.isArray(span.startTime) 
+            ? Math.floor(span.startTime[0] * 1000 + span.startTime[1] / 1000000) // Convert [seconds, nanoseconds] to milliseconds
+            : Math.floor(span.startTime / 1000000), // Fallback for non-array format
+          finished_at: Array.isArray(span.endTime)
+            ? Math.floor(span.endTime[0] * 1000 + span.endTime[1] / 1000000) // Convert [seconds, nanoseconds] to milliseconds
+            : Math.floor(span.endTime / 1000000)   // Fallback for non-array format
+        }
       };
 
-      // Handle different span types
-      if (isLLMSpan) {
-        // LLM span specific fields
-        lwSpan.vendor = attributes["llm.vendor"] || "unknown";
-        lwSpan.model = attributes["llm.model"] || attributes["n8n.node.parameters.model"] || "unknown";
-        
-        // Try to extract input and output
-        if (attributes["llm.prompt"] || attributes["n8n.node.parameters.prompt"]) {
-          lwSpan.input = {
-            type: "text",
-            value: attributes["llm.prompt"] || attributes["n8n.node.parameters.prompt"] || ""
-          };
+      // Add vendor and model for AI nodes
+      if (isAI) {
+        // Check if this is a RAG operation based on node type or attributes
+        if (nodeType.includes("rag") || 
+            attributes["n8n.node.is_rag"] === true || 
+            attributes["n8n.node.parameter.use_retrieval"] === true) {
+          lwSpan.type = "rag"; // Override type to "rag" for RAG operations
         }
         
-        if (attributes["llm.completion"] || attributes["n8n.node.output_json"]) {
-          try {
-            const output = attributes["llm.completion"] || 
-                          (attributes["n8n.node.output_json"] ? JSON.parse(attributes["n8n.node.output_json"]) : "");
-            lwSpan.output = {
-              type: "text",
-              value: typeof output === "string" ? output : JSON.stringify(output)
+        lwSpan.vendor = nodeType.includes("openai") ? "openai" : 
+                       nodeType.includes("anthropic") || nodeType.includes("claude") ? "anthropic" :
+                       "unknown";
+        
+        lwSpan.model = attributes["n8n.node.parameter.model"] || 
+                      attributes["llm.model"] || 
+                      "unknown";
+      }
+      
+      // Extract input
+      let input = null;
+      if (attributes["n8n.node.parameter.prompt"]) {
+        // Text prompt
+        input = {
+          type: "text",
+          value: attributes["n8n.node.parameter.prompt"]
+        };
+      } else if (attributes["n8n.node.parameter.messages"]) {
+        // Chat messages
+        try {
+          const messages = JSON.parse(attributes["n8n.node.parameter.messages"]);
+          if (Array.isArray(messages)) {
+            input = {
+              type: "chat_messages",
+              value: messages
             };
-          } catch (e) {
-            this.logger.warn(`Error parsing output for span ${spanId}:`, e);
           }
+        } catch (e) {
+          this.logger.warn(`Error parsing messages for node ${nodeName}:`, e);
         }
-        
-        // Extract metrics if available
-        if (attributes["llm.tokens.prompt"] || attributes["llm.tokens.completion"]) {
-          lwSpan.metrics = {
-            prompt_tokens: parseInt(attributes["llm.tokens.prompt"] || 0, 10),
-            completion_tokens: parseInt(attributes["llm.tokens.completion"] || 0, 10)
-          };
-        }
-      } else {
-        // Regular span
-        lwSpan.name = name;
-        
-        // Add input/output if available
-        if (attributes["n8n.node.parameters"]) {
-          try {
-            lwSpan.input = {
-              type: "json",
-              value: typeof attributes["n8n.node.parameters"] === "string" 
-                ? JSON.parse(attributes["n8n.node.parameters"]) 
-                : attributes["n8n.node.parameters"]
-            };
-          } catch (e) {
-            this.logger.warn(`Error parsing input for span ${spanId}:`, e);
+      } else if (attributes["n8n.node.ai_input.prompt"]) {
+        // AI input prompt
+        input = {
+          type: "text",
+          value: attributes["n8n.node.ai_input.prompt"]
+        };
+      }
+      
+      // If we have input, add it to the span
+      if (input) {
+        lwSpan.input = input;
+      }
+      
+      // Extract output
+      if (attributes["n8n.node.output_json"]) {
+        try {
+          const outputJson = JSON.parse(attributes["n8n.node.output_json"]);
+          
+          // Handle different output formats
+          if (Array.isArray(outputJson) && outputJson.length > 0) {
+            const firstOutput = outputJson[0];
+            
+            if (firstOutput.output) {
+              // Simple output format
+              lwSpan.output = {
+                type: "text",
+                value: firstOutput.output
+              };
+            } else if (firstOutput.choices && Array.isArray(firstOutput.choices)) {
+              // OpenAI-style output
+              const choice = firstOutput.choices[0];
+              if (choice.message) {
+                // Format as chat_messages with proper structure
+                lwSpan.output = {
+                  type: "chat_messages",
+                  value: [{
+                    role: choice.message.role || "assistant",
+                    content: choice.message.content,
+                    function_call: choice.message.function_call || null,
+                    tool_calls: choice.message.tool_calls || []
+                  }]
+                };
+              } else if (choice.text) {
+                lwSpan.output = {
+                  type: "text",
+                  value: choice.text
+                };
+              }
+            } else if (firstOutput.content) {
+              // Anthropic-style output
+              lwSpan.output = {
+                type: "text",
+                value: firstOutput.content
+              };
+            }
+            
+            // Extract metrics if available
+            if (firstOutput.usage) {
+              lwSpan.metrics = {
+                prompt_tokens: firstOutput.usage.prompt_tokens || 0,
+                completion_tokens: firstOutput.usage.completion_tokens || 0,
+                total_tokens: firstOutput.usage.total_tokens || 0
+              };
+            }
           }
+        } catch (e) {
+          this.logger.warn(`Error parsing output for node ${nodeName}:`, e);
         }
-        
-        if (attributes["n8n.node.output_json"]) {
-          try {
-            lwSpan.output = {
-              type: "json",
-              value: JSON.parse(attributes["n8n.node.output_json"])
-            };
-          } catch (e) {
-            this.logger.warn(`Error parsing output for span ${spanId}:`, e);
-          }
+      } else if (attributes["n8n.node.ai_output.output"]) {
+        // Direct AI output
+        lwSpan.output = {
+          type: "text",
+          value: attributes["n8n.node.ai_output.output"]
+        };
+      }
+      
+      // Extract parameters
+      const params = {};
+      Object.entries(attributes).forEach(([key, value]) => {
+        if (key.startsWith("n8n.node.parameter.") && 
+            key !== "n8n.node.parameter.prompt" && 
+            key !== "n8n.node.parameter.messages") {
+          const paramKey = key.replace("n8n.node.parameter.", "");
+          params[paramKey] = value;
         }
+      });
+      
+      if (Object.keys(params).length > 0) {
+        lwSpan.params = params;
       }
       
       // Handle errors
@@ -195,14 +300,23 @@ class LangWatchExporter {
       return lwSpan;
     });
 
-    // Construct the full trace payload
+    // Find workflow info for metadata
+    const workflowSpan = spans.find(span => span.name === "n8n.workflow.execute");
+    const workflowId = workflowSpan?.attributes?.["n8n.workflow.id"] || null;
+    const workflowName = workflowSpan?.attributes?.["n8n.workflow.name"] || null;
+    const executionId = spans.find(span => span.attributes?.["n8n.execution.id"])?.attributes?.["n8n.execution.id"] || null;
+
+    // Construct the full trace payload following LangWatch API format
     return {
       trace_id: traceId,
       spans: convertedSpans.filter(Boolean), // Remove null entries
       metadata: {
         service: this.serviceName,
-        workflow_id: spans[0].attributes["n8n.workflow.id"] || null,
-        workflow_name: spans[0].attributes["n8n.workflow.name"] || null
+        workflow_id: workflowId,
+        workflow_name: workflowName,
+        thread_id: workflowId, // Use workflow ID as thread ID for grouping related traces
+        execution_id: executionId, // Include execution ID if available
+        labels: ["n8n", "workflow"] // Add labels for filtering in LangWatch
       }
     };
   }
@@ -221,6 +335,13 @@ class LangWatchExporter {
 
     const payload = JSON.stringify(data);
     const url = new URL(`${this.endpoint}/api/collector`);
+    
+    // Log request details for debugging
+    this.logger.debug("Sending data to LangWatch:");
+    this.logger.debug(`- Endpoint: ${url.toString()}`);
+    this.logger.debug(`- API Key: ${this.apiKey ? this.apiKey.substring(0, 10) + '...' : 'undefined'}`);
+    this.logger.debug(`- Payload size: ${Buffer.byteLength(payload)} bytes`);
+    
     const options = {
       hostname: url.hostname,
       port: url.port || (url.protocol === "https:" ? 443 : 80),
@@ -247,6 +368,14 @@ class LangWatchExporter {
           resultCallback({ code: ExportResultCode.SUCCESS });
         } else {
           this.logger.error(`Error sending spans to LangWatch: ${res.statusCode} - ${responseData}`);
+          this.logger.debug("Response headers:", res.headers);
+          
+          // Log a sample of the payload for debugging
+          const payloadSample = payload.length > 1000 
+            ? payload.substring(0, 500) + '...' + payload.substring(payload.length - 500) 
+            : payload;
+          this.logger.debug("Request payload sample:", payloadSample);
+          
           resultCallback({ 
             code: ExportResultCode.FAILED, 
             error: new Error(`HTTP error ${res.statusCode}: ${responseData}`) 

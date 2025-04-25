@@ -1,0 +1,605 @@
+{
+  "trace_id": "894fa7fd983cd88e733926c4f258a432",
+  "spans": [
+    {
+      "span_id": "ba2ef800125cfbf0",
+      "parent_span_id": "c51706541931492a",
+      "trace_id": "894fa7fd983cd88e733926c4f258a432",
+      "name": "POST",
+      "kind": 2,
+      "start_time": [
+        1745585981,
+        584000000
+      ],
+      "end_time": [
+        1745585983,
+        435490251
+      ],
+      "duration_ms": null,
+      "status": {
+        "code": 0
+      },
+      "attributes": {
+        "http.url": "https://api.openai.com/v1/chat/completions",
+        "http.method": "POST",
+        "http.target": "/v1/chat/completions",
+        "net.peer.name": "api.openai.com",
+        "http.host": "api.openai.com:443",
+        "http.user_agent": [
+          "OpenAI/JS 4.78.1"
+        ],
+        "net.peer.ip": "172.66.0.243",
+        "net.peer.port": 443,
+        "http.status_code": 200,
+        "http.status_text": "OK",
+        "http.flavor": "1.1",
+        "net.transport": "ip_tcp"
+      },
+      "events": [],
+      "links": []
+    },
+    {
+      "span_id": "91f0aa03c892f340",
+      "parent_span_id": "c51706541931492a",
+      "trace_id": "894fa7fd983cd88e733926c4f258a432",
+      "name": "POST",
+      "kind": 2,
+      "start_time": [
+        1745585983,
+        467000000
+      ],
+      "end_time": [
+        1745585984,
+        326355917
+      ],
+      "duration_ms": null,
+      "status": {
+        "code": 0
+      },
+      "attributes": {
+        "http.url": "https://api.openai.com/v1/chat/completions",
+        "http.method": "POST",
+        "http.target": "/v1/chat/completions",
+        "net.peer.name": "api.openai.com",
+        "http.host": "api.openai.com:443",
+        "http.user_agent": [
+          "OpenAI/JS 4.78.1"
+        ],
+        "net.peer.ip": "172.66.0.243",
+        "net.peer.port": 443,
+        "http.status_code": 200,
+        "http.status_text": "OK",
+        "http.flavor": "1.1",
+        "net.transport": "ip_tcp"
+      },
+      "events": [],
+      "links": []
+    },
+    {
+      "span_id": "c51706541931492a",
+      "parent_span_id": "a65f89e949185923",
+      "trace_id": "894fa7fd983cd88e733926c4f258a432",
+      "name": "n8n.node.execute",
+      "kind": 0,
+      "start_time": [
+        1745585978,
+        554000000
+      ],
+      "end_time": [
+        1745585984,
+        337194878
+      ],
+      "duration_ms": null,
+      "status": {
+        "code": 0
+      },
+      "attributes": {
+        "n8n.workflow.id": "Y4QULdSzTlwDVNyt",
+        "n8n.execution.id": "8",
+        "n8n.node.name": "AI Agent",
+        "n8n.node.type": "@n8n/n8n-nodes-langchain.agent",
+        "n8n.node.is_ai": true,
+        "n8n.node.credentials": "none",
+        "n8n.node.output_json": "[{\"output\":\"240 divided by 30 equals 8.\"}]",
+        "n8n.node.output_count": 1,
+        "n8n.node.output_type": "object",
+        "n8n.node.ai_output.output": "240 divided by 30 equals 8."
+      },
+      "events": [],
+      "links": [],
+      "child_spans": [
+        "ba2ef800125cfbf0",
+        "91f0aa03c892f340"
+      ],
+      "node_data": {
+        "name": "AI Agent",
+        "type": "@n8n/n8n-nodes-langchain.agent",
+        "is_ai": true,
+        "parameters": {},
+        "output": [
+          {
+            "output": "240 divided by 30 equals 8."
+          }
+        ],
+        "ai_output": {}
+      }
+    },
+    {
+      "span_id": "a65f89e949185923",
+      "parent_span_id": "21a9fdd456773ffe",
+      "trace_id": "894fa7fd983cd88e733926c4f258a432",
+      "name": "n8n.workflow.execute",
+      "kind": 0,
+      "start_time": [
+        1745585978,
+        548000000
+      ],
+      "end_time": [
+        1745585984,
+        365011795
+      ],
+      "duration_ms": null,
+      "status": {
+        "code": 0
+      },
+      "attributes": {
+        "n8n.workflow.id": "Y4QULdSzTlwDVNyt",
+        "n8n.workflow.name": "My workflow",
+        "n8n.workflow.settings.executionOrder": "v1"
+      },
+      "events": [],
+      "links": [],
+      "child_spans": [
+        "c51706541931492a"
+      ],
+      "workflow_data": {
+        "id": "Y4QULdSzTlwDVNyt",
+        "name": "My workflow",
+        "settings": {
+          "executionOrder": "v1"
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "service": "n8n",
+    "timestamp": 1745585984440,
+    "span_count": 4,
+    "workflow_span_count": 1,
+    "node_span_count": 1,
+    "workflow_id": "Y4QULdSzTlwDVNyt",
+    "workflow_name": "My workflow",
+    "environment": "production",
+    "n8n_version": "1.89.2"
+  },
+  "workflow_execution": {
+    "id": "Y4QULdSzTlwDVNyt",
+    "name": "My workflow",
+    "span_id": "a65f89e949185923",
+    "start_time": [
+      1745585978,
+      548000000
+    ],
+    "end_time": [
+      1745585984,
+      365011795
+    ],
+    "duration_ms": null,
+    "nodes": [
+      {
+        "name": "AI Agent",
+        "type": "@n8n/n8n-nodes-langchain.agent",
+        "span_id": "c51706541931492a",
+        "start_time": [
+          1745585978,
+          554000000
+        ],
+        "end_time": [
+          1745585984,
+          337194878
+        ],
+        "duration_ms": null,
+        "output": [
+          {
+            "output": "240 divided by 30 equals 8."
+          }
+        ]
+      }
+    ]
+  },
+  "raw_spans": [
+    {
+      "attributes": {
+        "http.url": "https://api.openai.com/v1/chat/completions",
+        "http.method": "POST",
+        "http.target": "/v1/chat/completions",
+        "net.peer.name": "api.openai.com",
+        "http.host": "api.openai.com:443",
+        "http.user_agent": [
+          "OpenAI/JS 4.78.1"
+        ],
+        "net.peer.ip": "172.66.0.243",
+        "net.peer.port": 443,
+        "http.status_code": 200,
+        "http.status_text": "OK",
+        "http.flavor": "1.1",
+        "net.transport": "ip_tcp"
+      },
+      "links": [],
+      "events": [],
+      "_droppedAttributesCount": 0,
+      "_droppedEventsCount": 0,
+      "_droppedLinksCount": 0,
+      "status": {
+        "code": 0
+      },
+      "endTime": [
+        1745585983,
+        435490251
+      ],
+      "_ended": true,
+      "_duration": [
+        1,
+        851490251
+      ],
+      "name": "POST",
+      "_spanContext": {
+        "traceId": "894fa7fd983cd88e733926c4f258a432",
+        "spanId": "ba2ef800125cfbf0",
+        "traceFlags": 1
+      },
+      "parentSpanId": "c51706541931492a",
+      "kind": 2,
+      "_performanceStartTime": 570282.932011,
+      "_performanceOffset": 12842.4599609375,
+      "_startTimeProvided": false,
+      "startTime": [
+        1745585981,
+        584000000
+      ],
+      "resource": {
+        "_attributes": {
+          "service.name": "n8n",
+          "telemetry.sdk.language": "nodejs",
+          "telemetry.sdk.name": "opentelemetry",
+          "telemetry.sdk.version": "1.13.0",
+          "service.version": "1.89.2",
+          "deployment.environment": "production",
+          "n8n.version": "1.89.2",
+          "n8n.instance_id": "default",
+          "process.pid": 7,
+          "process.executable.name": "node",
+          "process.executable.path": "/usr/local/bin/node",
+          "process.command_args": [
+            "/usr/local/bin/node",
+            "--require",
+            "/usr/local/lib/node_modules/n8n/tracing.js",
+            "/usr/local/bin/n8n"
+          ],
+          "process.runtime.version": "20.19.0",
+          "process.runtime.name": "nodejs",
+          "process.runtime.description": "Node.js",
+          "process.command": "/usr/local/bin/n8n",
+          "process.owner": "node"
+        },
+        "asyncAttributesPending": false,
+        "_syncAttributes": {
+          "service.name": "n8n",
+          "telemetry.sdk.language": "nodejs",
+          "telemetry.sdk.name": "opentelemetry",
+          "telemetry.sdk.version": "1.13.0",
+          "service.version": "1.89.2",
+          "deployment.environment": "production",
+          "n8n.version": "1.89.2",
+          "n8n.instance_id": "default"
+        },
+        "_asyncAttributesPromise": {}
+      },
+      "instrumentationLibrary": {
+        "name": "@opentelemetry/instrumentation-http",
+        "version": "0.39.1"
+      },
+      "_spanLimits": {
+        "attributeValueLengthLimit": null,
+        "attributeCountLimit": 128,
+        "linkCountLimit": 128,
+        "eventCountLimit": 128,
+        "attributePerEventCountLimit": 128,
+        "attributePerLinkCountLimit": 128
+      },
+      "_spanProcessor": "[Cannot stringify: Converting circular structure to JSON\n    --> starting at object with constructor 'DerivedLogger'\n    |     property '_readableState' -> object with constructor 'ReadableState'\n    |     property 'pipes' -> object with constructor 'Console'\n    --- property 'parent' closes the circle]",
+      "_attributeValueLengthLimit": null
+    },
+    {
+      "attributes": {
+        "http.url": "https://api.openai.com/v1/chat/completions",
+        "http.method": "POST",
+        "http.target": "/v1/chat/completions",
+        "net.peer.name": "api.openai.com",
+        "http.host": "api.openai.com:443",
+        "http.user_agent": [
+          "OpenAI/JS 4.78.1"
+        ],
+        "net.peer.ip": "172.66.0.243",
+        "net.peer.port": 443,
+        "http.status_code": 200,
+        "http.status_text": "OK",
+        "http.flavor": "1.1",
+        "net.transport": "ip_tcp"
+      },
+      "links": [],
+      "events": [],
+      "_droppedAttributesCount": 0,
+      "_droppedEventsCount": 0,
+      "_droppedLinksCount": 0,
+      "status": {
+        "code": 0
+      },
+      "endTime": [
+        1745585984,
+        326355917
+      ],
+      "_ended": true,
+      "_duration": [
+        0,
+        859355917
+      ],
+      "name": "POST",
+      "_spanContext": {
+        "traceId": "894fa7fd983cd88e733926c4f258a432",
+        "spanId": "91f0aa03c892f340",
+        "traceFlags": 1
+      },
+      "parentSpanId": "c51706541931492a",
+      "kind": 2,
+      "_performanceStartTime": 572166.358846,
+      "_performanceOffset": 12842.033203125,
+      "_startTimeProvided": false,
+      "startTime": [
+        1745585983,
+        467000000
+      ],
+      "resource": {
+        "_attributes": {
+          "service.name": "n8n",
+          "telemetry.sdk.language": "nodejs",
+          "telemetry.sdk.name": "opentelemetry",
+          "telemetry.sdk.version": "1.13.0",
+          "service.version": "1.89.2",
+          "deployment.environment": "production",
+          "n8n.version": "1.89.2",
+          "n8n.instance_id": "default",
+          "process.pid": 7,
+          "process.executable.name": "node",
+          "process.executable.path": "/usr/local/bin/node",
+          "process.command_args": [
+            "/usr/local/bin/node",
+            "--require",
+            "/usr/local/lib/node_modules/n8n/tracing.js",
+            "/usr/local/bin/n8n"
+          ],
+          "process.runtime.version": "20.19.0",
+          "process.runtime.name": "nodejs",
+          "process.runtime.description": "Node.js",
+          "process.command": "/usr/local/bin/n8n",
+          "process.owner": "node"
+        },
+        "asyncAttributesPending": false,
+        "_syncAttributes": {
+          "service.name": "n8n",
+          "telemetry.sdk.language": "nodejs",
+          "telemetry.sdk.name": "opentelemetry",
+          "telemetry.sdk.version": "1.13.0",
+          "service.version": "1.89.2",
+          "deployment.environment": "production",
+          "n8n.version": "1.89.2",
+          "n8n.instance_id": "default"
+        },
+        "_asyncAttributesPromise": {}
+      },
+      "instrumentationLibrary": {
+        "name": "@opentelemetry/instrumentation-http",
+        "version": "0.39.1"
+      },
+      "_spanLimits": {
+        "attributeValueLengthLimit": null,
+        "attributeCountLimit": 128,
+        "linkCountLimit": 128,
+        "eventCountLimit": 128,
+        "attributePerEventCountLimit": 128,
+        "attributePerLinkCountLimit": 128
+      },
+      "_spanProcessor": "[Cannot stringify: Converting circular structure to JSON\n    --> starting at object with constructor 'DerivedLogger'\n    |     property '_readableState' -> object with constructor 'ReadableState'\n    |     property 'pipes' -> object with constructor 'Console'\n    --- property 'parent' closes the circle]",
+      "_attributeValueLengthLimit": null
+    },
+    {
+      "attributes": {
+        "n8n.workflow.id": "Y4QULdSzTlwDVNyt",
+        "n8n.execution.id": "8",
+        "n8n.node.name": "AI Agent",
+        "n8n.node.type": "@n8n/n8n-nodes-langchain.agent",
+        "n8n.node.is_ai": true,
+        "n8n.node.credentials": "none",
+        "n8n.node.output_json": "[{\"output\":\"240 divided by 30 equals 8.\"}]",
+        "n8n.node.output_count": 1,
+        "n8n.node.output_type": "object",
+        "n8n.node.ai_output.output": "240 divided by 30 equals 8."
+      },
+      "links": [],
+      "events": [],
+      "_droppedAttributesCount": 0,
+      "_droppedEventsCount": 0,
+      "_droppedLinksCount": 0,
+      "status": {
+        "code": 0
+      },
+      "endTime": [
+        1745585984,
+        337194878
+      ],
+      "_ended": true,
+      "_duration": [
+        5,
+        783194878
+      ],
+      "name": "n8n.node.execute",
+      "_spanContext": {
+        "traceId": "894fa7fd983cd88e733926c4f258a432",
+        "spanId": "c51706541931492a",
+        "traceFlags": 1
+      },
+      "parentSpanId": "a65f89e949185923",
+      "kind": 0,
+      "_performanceStartTime": 567253.033885,
+      "_performanceOffset": 12842.358154296875,
+      "_startTimeProvided": false,
+      "startTime": [
+        1745585978,
+        554000000
+      ],
+      "resource": {
+        "_attributes": {
+          "service.name": "n8n",
+          "telemetry.sdk.language": "nodejs",
+          "telemetry.sdk.name": "opentelemetry",
+          "telemetry.sdk.version": "1.13.0",
+          "service.version": "1.89.2",
+          "deployment.environment": "production",
+          "n8n.version": "1.89.2",
+          "n8n.instance_id": "default",
+          "process.pid": 7,
+          "process.executable.name": "node",
+          "process.executable.path": "/usr/local/bin/node",
+          "process.command_args": [
+            "/usr/local/bin/node",
+            "--require",
+            "/usr/local/lib/node_modules/n8n/tracing.js",
+            "/usr/local/bin/n8n"
+          ],
+          "process.runtime.version": "20.19.0",
+          "process.runtime.name": "nodejs",
+          "process.runtime.description": "Node.js",
+          "process.command": "/usr/local/bin/n8n",
+          "process.owner": "node"
+        },
+        "asyncAttributesPending": false,
+        "_syncAttributes": {
+          "service.name": "n8n",
+          "telemetry.sdk.language": "nodejs",
+          "telemetry.sdk.name": "opentelemetry",
+          "telemetry.sdk.version": "1.13.0",
+          "service.version": "1.89.2",
+          "deployment.environment": "production",
+          "n8n.version": "1.89.2",
+          "n8n.instance_id": "default"
+        },
+        "_asyncAttributesPromise": {}
+      },
+      "instrumentationLibrary": {
+        "name": "n8n-instrumentation",
+        "version": "1.0.0"
+      },
+      "_spanLimits": {
+        "attributeValueLengthLimit": null,
+        "attributeCountLimit": 128,
+        "linkCountLimit": 128,
+        "eventCountLimit": 128,
+        "attributePerEventCountLimit": 128,
+        "attributePerLinkCountLimit": 128
+      },
+      "_spanProcessor": "[Cannot stringify: Converting circular structure to JSON\n    --> starting at object with constructor 'DerivedLogger'\n    |     property '_readableState' -> object with constructor 'ReadableState'\n    |     property 'pipes' -> object with constructor 'Console'\n    --- property 'parent' closes the circle]",
+      "_attributeValueLengthLimit": null
+    },
+    {
+      "attributes": {
+        "n8n.workflow.id": "Y4QULdSzTlwDVNyt",
+        "n8n.workflow.name": "My workflow",
+        "n8n.workflow.settings.executionOrder": "v1"
+      },
+      "links": [],
+      "events": [],
+      "_droppedAttributesCount": 0,
+      "_droppedEventsCount": 0,
+      "_droppedLinksCount": 0,
+      "status": {
+        "code": 0
+      },
+      "endTime": [
+        1745585984,
+        365011795
+      ],
+      "_ended": true,
+      "_duration": [
+        5,
+        817011795
+      ],
+      "name": "n8n.workflow.execute",
+      "_spanContext": {
+        "traceId": "894fa7fd983cd88e733926c4f258a432",
+        "spanId": "a65f89e949185923",
+        "traceFlags": 1
+      },
+      "parentSpanId": "21a9fdd456773ffe",
+      "kind": 0,
+      "_performanceStartTime": 567246.957218,
+      "_performanceOffset": 12842.434814453125,
+      "_startTimeProvided": false,
+      "startTime": [
+        1745585978,
+        548000000
+      ],
+      "resource": {
+        "_attributes": {
+          "service.name": "n8n",
+          "telemetry.sdk.language": "nodejs",
+          "telemetry.sdk.name": "opentelemetry",
+          "telemetry.sdk.version": "1.13.0",
+          "service.version": "1.89.2",
+          "deployment.environment": "production",
+          "n8n.version": "1.89.2",
+          "n8n.instance_id": "default",
+          "process.pid": 7,
+          "process.executable.name": "node",
+          "process.executable.path": "/usr/local/bin/node",
+          "process.command_args": [
+            "/usr/local/bin/node",
+            "--require",
+            "/usr/local/lib/node_modules/n8n/tracing.js",
+            "/usr/local/bin/n8n"
+          ],
+          "process.runtime.version": "20.19.0",
+          "process.runtime.name": "nodejs",
+          "process.runtime.description": "Node.js",
+          "process.command": "/usr/local/bin/n8n",
+          "process.owner": "node"
+        },
+        "asyncAttributesPending": false,
+        "_syncAttributes": {
+          "service.name": "n8n",
+          "telemetry.sdk.language": "nodejs",
+          "telemetry.sdk.name": "opentelemetry",
+          "telemetry.sdk.version": "1.13.0",
+          "service.version": "1.89.2",
+          "deployment.environment": "production",
+          "n8n.version": "1.89.2",
+          "n8n.instance_id": "default"
+        },
+        "_asyncAttributesPromise": {}
+      },
+      "instrumentationLibrary": {
+        "name": "n8n-instrumentation",
+        "version": "1.0.0"
+      },
+      "_spanLimits": {
+        "attributeValueLengthLimit": null,
+        "attributeCountLimit": 128,
+        "linkCountLimit": 128,
+        "eventCountLimit": 128,
+        "attributePerEventCountLimit": 128,
+        "attributePerLinkCountLimit": 128
+      },
+      "_spanProcessor": "[Cannot stringify: Converting circular structure to JSON\n    --> starting at object with constructor 'DerivedLogger'\n    |     property '_readableState' -> object with constructor 'ReadableState'\n    |     property 'pipes' -> object with constructor 'Console'\n    --- property 'parent' closes the circle]",
+      "_attributeValueLengthLimit": null
+    }
+  ]
+}

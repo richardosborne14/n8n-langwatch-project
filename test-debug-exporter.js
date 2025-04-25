@@ -10,7 +10,8 @@ const { SimpleSpanProcessor } = require('@opentelemetry/sdk-trace-base');
 const provider = new NodeTracerProvider();
 const memoryExporter = new InMemorySpanExporter();
 const spanProcessor = new SimpleSpanProcessor(memoryExporter);
-provider.addSpanProcessor(spanProcessor);
+// In OpenTelemetry SDK v2.0.0, the API has changed
+provider.registerSpanProcessor(spanProcessor);
 provider.register();
 
 // Create our debug exporter
